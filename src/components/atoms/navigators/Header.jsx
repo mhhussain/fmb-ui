@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Nav, Navbar, NavLink } from "react-bootstrap";
 
-export default function Navigtion() {
+export default function Header() {
   return (
     <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
       <Navbar.Toggle

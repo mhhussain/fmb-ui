@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Navigation from "./Navigation";
-import "../css/App.css";
+import Header from "../../atoms/navigators/Header";
+import "../../../styles/Home.css";
 import { Outlet } from "react-router-dom";
-import Login from "./Login";
+import Login from "../login/Login";
 
-export default function App() {
+export default function Home() {
   const [token, setToken] = useState(false);
 
   if (!token) {
@@ -13,7 +13,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <Navigation />
+      <Header />
       <h1>FMB</h1>
       <div>
         <Outlet />
