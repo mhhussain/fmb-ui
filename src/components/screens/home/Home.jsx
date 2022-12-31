@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Header from "../../atoms/navigators/Header";
-import "../../../styles/Home.css";
+import Header from "@/atoms/navigators/Header";
+import "@/styles/Home.css";
 import { Outlet } from "react-router-dom";
-import Login from "../login/Login";
+import Login from "@/screens/login/Login";
 
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
