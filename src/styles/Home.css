@@ -1,7 +1,4 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -36,6 +33,14 @@
   padding: 2em;
 }
 
-.read-the-docs {
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
   color: #888;
+}
+
+.font-black {
+  color: black;
 }
