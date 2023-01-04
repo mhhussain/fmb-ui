@@ -1,7 +1,7 @@
 import { object, string, number } from 'yup';
 
 const schema = object({
-  JamaatMemberID: string().required(),
+  JamaatMemberID: number().required(),
   ItsID: string().required(),
   FirstName: string().nullable(),
   LastName: string().nullable(),

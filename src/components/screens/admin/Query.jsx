@@ -4,7 +4,7 @@ import AdminQuery from "@/organisms/admin-queryer";
 
 import "@/styles/Home.css";
 
-import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
+import { getJamaatMemberByITSId, getHouseholdById } from "@/api/thaaliApi";
 
 export default function Query() {
 
@@ -24,14 +24,8 @@ export default function Query() {
     <div className="App">
       <Header />
       <h1>FMB DB Query Page</h1>
-      <div className="output">
-        <p>getJamaatMemberByITSId</p>
-        <input type="text" value={getJamaatMemberByITSId_input} onChange={change_getJamaatMemberByITSId_input} />
-        <button onClick={thisgetJamaatMemberByITSId}>Get Jamaat Member</button>
-        <textarea rows="5" cols="50" value={getJamaatMemberByITSId_output} onChange={change_getJamaatMemberByITSId_output} />
-      </div>
       <AdminQuery queryName="getJamaatMemberByITSId" req={getJamaatMemberByITSId} />
-      <p className="footer">© Anjuman-e-Najmi, Detroit 2023</p>
+      <AdminQuery queryName="getHouseholdById" req={getHouseholdById} />
     </div>
   );
 }
