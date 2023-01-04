@@ -1,5 +1,16 @@
 import React, { useState } from "react";
 import "@/styles/Login.css";
+import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
+
+function isITSvalid(its) {
+  var r = getJamaatMemberByITSId(its);
+  if (r) {
+    console.log(r);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export default function Login({ setToken }) {
   const [username, setUserName] = useState();
@@ -28,7 +39,7 @@ export default function Login({ setToken }) {
           <button
             className="btn btn-primary"
             type="submit"
-            onClick={(e) => setToken(true)}
+            onClick={(e) => setToken(isITSvalid(e.target.value))}
           >
             Submit
           </button>
