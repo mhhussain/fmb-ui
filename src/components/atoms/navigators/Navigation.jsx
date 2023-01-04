@@ -1,8 +1,11 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from "@/screens/home/Home";
 import Tasbeeh from "@/screens/tasbeeh/Tasbeeh";
-import "@/styles/index.css";
 import Calendar from "@/screens/calendar/Calendar";
+import Query from "@/screens/admin/Query";
+
+import "@/styles/index.css";
+
 const router = createBrowserRouter([
     {
       path: "/",
@@ -18,6 +21,10 @@ const router = createBrowserRouter([
         },
       ],
     },
+    {
+      path: "/admin/query",
+      element: <Query />
+    }
   ]);
 
 const Navigation = () => {
