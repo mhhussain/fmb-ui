@@ -2,19 +2,23 @@ import React, { useState } from "react";
 import "@/styles/Login.css";
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
-function isITSvalid(its) {
-  var r = getJamaatMemberByITSId(its);
-  if (r) {
-    console.log(r);
-    return true;
-  } else {
-    return false;
-  }
-}
-
 export default function Login({ setToken }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
+
+  const isITSvalid = async () => {
+    getJamaatMemberByITSId(username).then((d) => {
+      // console.log("hello worlds");
+      if (d.data.length == 1) {
+        console.log("valid ITS:", d);
+        setToken(true);
+      } else {
+        console.log("invalid ITS");
+        setToken(false);
+      }
+    });
+  }
+
   return (
     <div className="login-wrapper">
       <h1>Please Log In</h1>
@@ -24,7 +28,10 @@ export default function Login({ setToken }) {
           <input
             className="form-control"
             type="text"
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e) => {
+              setUserName(e.target.value);
+              console.log(username);
+            }}
           />
         </label>
         <label>
@@ -39,7 +46,7 @@ export default function Login({ setToken }) {
           <button
             className="btn btn-primary"
             type="submit"
-            onClick={(e) => setToken(isITSvalid(e.target.value))}
+            onClick={() => isITSvalid()}
           >
             Submit
           </button>
