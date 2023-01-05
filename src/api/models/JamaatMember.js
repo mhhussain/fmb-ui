@@ -1,4 +1,5 @@
 import { object, string, number } from 'yup';
+import { Audit } from '@/models/Audit';
 
 const schema = object({
   JamaatMemberID: number().required(),
@@ -14,8 +15,9 @@ const schema = object({
   UserRole_UserRoleID: number()
 });
 
-class JamaatMember {
+class JamaatMember extends Audit {
   constructor(apiobj) {
+    super(apiobj);
     this.JamaatMemberID = apiobj.JamaatMemberID;
     this.ItsID = apiobj.ItsID;
     this.FirstName = apiobj.FirstName;

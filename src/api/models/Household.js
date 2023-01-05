@@ -1,4 +1,5 @@
 import { object, string, number } from 'yup';
+import { Audit } from '@/models/Audit';
 
 const schema = object({
   HouseholdID: number().required(),
@@ -10,8 +11,9 @@ const schema = object({
   HeadOfHousehold_JamaatMemberID: number().nullable()
 });
 
-class Household {
+class Household extends Audit {
   constructor(apiobj) {
+    super(apiobj);
     this.HouseholdID = apiobj.HouseholdID;
     this.HomePhone = apiobj.HomePhone;
     this.StreetAddress1 = apiobj.StreetAddress1;
