@@ -6,17 +6,29 @@ import { HouseholdFaizUlMawaidProfile, schema as householdFaizUlMawaidProfileSch
 const API_ENDPOINT = `https://test-thaali-api.herokuapp.com/api/db`;
 
 const getJamaatMemberByITSId = async (itsId) => {
-  return new JamaatMember(await jamaatMemberSchema.validate((await axios.get(`${API_ENDPOINT}/JamaatMembers?ItsID=${itsId}`)).data[0]));
+  // Retrieve data
+  const res = (await axios.get(`${API_ENDPOINT}/JamaatMembers?ItsID=${itsId}`)).data[0];
+  // Validate response
+  await jamaatMemberSchema.validate(res);
+  // Return new mapped object
+  return new JamaatMember(res);
 };
 
 const getHouseholdById = async (householdId) => {
-  return new Household(await householdSchema.validate((await axios.get(`${API_ENDPOINT}/Households?HouseholdID=${householdId}`)).data[0]));
+  // Retrieve data
+  const res = (await axios.get(`${API_ENDPOINT}/Households?HouseholdID=${householdId}`)).data[0];
+  // Validate response
+  await householdSchema.validate(res);
+  // Return new mapped object
+  return new Household(res);
 };
 
 const getFMBProfileByHouseholdId = async (householdId) => {
+  // Retrieve data
   const res = (await axios.get(`${API_ENDPOINT}/HouseholdFaizUlMawaidProfiles?Household_HouseholdID=${householdId}`)).data[0];
-  console.dir(res);
+  // Validate response
   await householdFaizUlMawaidProfileSchema.validate(res);
+  // Return new mapped object
   return new HouseholdFaizUlMawaidProfile(res);
 }
 
