@@ -3,14 +3,13 @@ import "@/styles/Login.css";
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
 export default function Login({ setToken }) {
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
   const isITSvalid = async () => {
     getJamaatMemberByITSId(username).then((d) => {
-      // console.log("hello worlds");
       if (d.data.length == 1) {
-        console.log("valid ITS:", d);
+        console.log("valid ITS:", d.data[0]);
         setToken(true);
       } else {
         console.log("invalid ITS");
@@ -28,10 +27,7 @@ export default function Login({ setToken }) {
           <input
             className="form-control"
             type="text"
-            onChange={(e) => {
-              setUserName(e.target.value);
-              console.log(username);
-            }}
+            onChange={(e) => setUserName(e.target.value)}
           />
         </label>
         <label>
@@ -46,7 +42,7 @@ export default function Login({ setToken }) {
           <button
             className="btn btn-primary"
             type="submit"
-            onClick={() => isITSvalid()}
+            onClick={isITSvalid}
           >
             Submit
           </button>
