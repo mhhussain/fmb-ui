@@ -17,7 +17,7 @@ export default function Home() {
   const getMember = async () => {
     getJamaatMemberByITSId(itsId).then((d) => {
       //setName(`${d.data[0].FirstName} ${d.data[0].LastName}`);
-      setName(JSON.stringify(d.data[0]));
+      setName(JSON.stringify(d));
     });
   };
 

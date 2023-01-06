@@ -41,6 +41,7 @@ export default defineConfig({
       { find: '@/templates', replacement: '/src/components/templates' },
       { find: '@/screens', replacement: '/src/components/screens' },
       { find: '@/api', replacement: '/src/api' },
+      { find: '@/models', replacement: '/src/api/models' },
       { find: '@/assets', replacement: '/src/assets' },
       { find: '@/redux', replacement: '/src/redux' },
       { find: '@/styles', replacement: '/src/styles' },
