@@ -31,18 +31,14 @@ export default function Login({ setToken, setMemberData }) {
     <div className="login-wrapper">
       <h1>FMB (alpha)</h1>
       <label>
-        <p className="form-label">ITS ID</p>
+        <p>ITS ID</p>
         <input
-          className="form-control"
           type="text"
           onChange={(e) => setItsID(e.target.value)}
         />
       </label>
-      <div className="submit-button">
-        <button
-          className="btn btn-primary"
-          onClick={updateITSValid}
-        >
+      <div>
+        <button className="btn btn-primary" onClick={updateITSValid}>
           Login
         </button>
       </div>
