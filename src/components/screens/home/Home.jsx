@@ -10,6 +10,7 @@ export default function Home() {
   const [token, setToken] = useState(false);
   const [itsId, setItsId] = useState(0);
   const [name, setName] = useState("");
+  const [memberData, setMemberData] = useState(null);
 
   const handleChange = (e) => setItsId(e.target.value);
 
@@ -21,7 +22,7 @@ export default function Home() {
   };
 
   if (!token) {
-    return <Login setToken={setToken} />;
+    return <Login setToken={setToken} setMemberData={setMemberData}/>;
   }
 
   return (
@@ -29,6 +30,7 @@ export default function Home() {
       <Header />
       <h1>FMB</h1>
       <div className="font-black">
+        <p>Logged in as {memberData.FirstName} {memberData.LastName}</p>
         <p>{itsId}</p>
         <p>{name}</p>
       </div>
