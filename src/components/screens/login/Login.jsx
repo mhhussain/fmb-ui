@@ -10,15 +10,12 @@ export default function Login({ setToken, setMemberData }) {
 
   const updateITSValid = async () => {
     getJamaatMemberByITSId(username).then((d) => {
-      if (d.data.length == 1) {
-        console.log("valid ITS:", d.data[0]);
-        setMemberData(d.data[0]);
-        setToken(true);
-      } else {
-        console.log("invalid ITS");
-        setToken(false);
-        setInvalid(true);
-      }
+      setMemberData(d);
+      setToken(true);
+    },
+    () => {
+      setToken(false);
+      setInvalid(true);
     });
   }
 
