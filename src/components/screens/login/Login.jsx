@@ -5,11 +5,11 @@ import "@/styles/Login.css";
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
 export default function Login({ setToken, setMemberData }) {
-  const [username, setUserName] = useState("");
+  const [itsID, setItsID] = useState("");
   const [invalid, setInvalid] = useState(false);
 
   const updateITSValid = async () => {
-    getJamaatMemberByITSId(username).then((d) => {
+    getJamaatMemberByITSId(itsID).then((d) => {
       setMemberData(d);
       setToken(true);
     },
@@ -31,11 +31,11 @@ export default function Login({ setToken, setMemberData }) {
     <div className="login-wrapper">
       <h1>FMB (alpha)</h1>
       <label>
-        <p className="form-label">Username</p>
+        <p className="form-label">ITS ID</p>
         <input
           className="form-control"
           type="text"
-          onChange={(e) => setUserName(e.target.value)}
+          onChange={(e) => setItsID(e.target.value)}
         />
       </label>
       <div className="submit-button">
@@ -43,7 +43,7 @@ export default function Login({ setToken, setMemberData }) {
           className="btn btn-primary"
           onClick={updateITSValid}
         >
-          Submit
+          Login
         </button>
       </div>
       <p className="footer">© Anjuman-e-Najmi, Detroit 2023</p>
@@ -54,7 +54,7 @@ export default function Login({ setToken, setMemberData }) {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-          Invalid ITS Number
+          Invalid ITS ID
         </Alert>
       </Snackbar>
     </div>
