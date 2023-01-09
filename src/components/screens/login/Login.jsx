@@ -1,19 +1,29 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@/atoms/Alert';
 import "@/styles/Login.css";
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
-export default function Login({ setToken, setMemberData }) {
+export default function Login() {
+  const [token, setToken] = useState(false);
+  const [memberData, setMemberData] = useState();
   const [itsID, setItsID] = useState("");
   const [invalid, setInvalid] = useState(false);
 
+  if (token) {
+    return <Navigate to="/home" replace={true} state={{ memberData: memberData }} />;
+  }
+
   const updateITSValid = async () => {
     getJamaatMemberByITSId(itsID).then((d) => {
+      console.log("valid its");
       setMemberData(d);
       setToken(true);
+      return <Navigate to="/home" replace={true} state={{memberData: memberData}} />;
     },
     () => {
+      console.log("invalid its");
       setToken(false);
       setInvalid(true);
     });

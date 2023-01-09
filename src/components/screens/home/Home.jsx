@@ -1,16 +1,15 @@
 import { useState } from "react";
+import { useLocation, Outlet } from "react-router-dom";
 import Header from "@/atoms/navigators/Header";
 import "@/styles/Home.css";
-import { Outlet } from "react-router-dom";
-import Login from "@/screens/login/Login";
 
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
 export default function Home() {
-  const [token, setToken] = useState(false);
   const [itsId, setItsId] = useState(0);
   const [name, setName] = useState("");
-  const [memberData, setMemberData] = useState(null);
+  const {state} = useLocation();
+  const { memberData } = state; // Read values passed on state
 
   const handleChange = (e) => setItsId(e.target.value);
 
@@ -20,10 +19,6 @@ export default function Home() {
       setName(JSON.stringify(d));
     });
   };
-
-  if (!token) {
-    return <Login setToken={setToken} setMemberData={setMemberData}/>;
-  }
 
   return (
     <div className="App">
