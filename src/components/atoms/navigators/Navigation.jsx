@@ -4,14 +4,13 @@ import Login from "@/screens/login/Login";
 import Tasbeeh from "@/screens/tasbeeh/Tasbeeh";
 import Calendar from "@/screens/calendar/Calendar";
 import Query from "@/screens/admin/Query";
-import Root from "@/atoms/navigators/Root";
 
 import "@/styles/index.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <Home />,
   },
   {
     path: "/login",

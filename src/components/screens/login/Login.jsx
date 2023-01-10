@@ -17,13 +17,10 @@ export default function Login() {
 
   const updateITSValid = async () => {
     getJamaatMemberByITSId(itsID).then((d) => {
-      console.log("valid its");
       setMemberData(d);
       setToken(true);
-      return <Navigate to="/home" replace={true} state={{memberData: memberData}} />;
     },
     () => {
-      console.log("invalid its");
       setToken(false);
       setInvalid(true);
     });
