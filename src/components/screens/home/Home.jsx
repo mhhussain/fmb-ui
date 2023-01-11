@@ -1,40 +1,28 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 import Header from "@/atoms/navigators/Header";
 import "@/styles/Home.css";
-import { Outlet } from "react-router-dom";
-import Login from "@/screens/login/Login";
 
 import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
 export default function Home() {
-  const [token, setToken] = useState(false);
-  const [itsId, setItsId] = useState(0);
-  const [name, setName] = useState("");
+  // TODO: Move to using Redux for state management
+  const {state} = useLocation();
 
-  const handleChange = (e) => setItsId(e.target.value);
-
-  const getMember = async () => {
-    getJamaatMemberByITSId(itsId).then((d) => {
-      //setName(`${d.data[0].FirstName} ${d.data[0].LastName}`);
-      setName(JSON.stringify(d));
-    });
-  };
-
-  if (!token) {
-    return <Login setToken={setToken} />;
+  // If state and memberData does not exist - redirect to /login
+  if (!state || !state.memberData) {
+    return <Navigate to="/login" replace={true} />;
   }
+
+  const { memberData } = state; // Read values passed on state
 
   return (
     <div className="App">
       <Header />
       <h1>FMB</h1>
       <div className="font-black">
-        <p>{itsId}</p>
-        <p>{name}</p>
-      </div>
-      <div className="output">
-        <input type="text" value={itsId} onChange={handleChange} />
-        <button onClick={getMember}>Get Jamaat Member</button>
+        <p>Logged in as {memberData.FirstName} {memberData.LastName}</p>
       </div>
       <div>
         <Outlet />
