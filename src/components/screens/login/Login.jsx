@@ -12,7 +12,7 @@ export default function Login() {
   const [invalid, setInvalid] = useState(false);
 
   if (token) {
-    return <Navigate to="/home" replace={true} state={{ memberData: memberData }} />;
+    return <Navigate to="/" replace={true} state={{ memberData: memberData }} />;
   }
 
   const updateITSValid = async () => {

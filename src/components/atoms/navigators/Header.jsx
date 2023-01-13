@@ -14,10 +14,10 @@ export default function Header() {
           <NavLink eventKey="1" as={Link} to="/">
             Home
           </NavLink>
-          <NavLink eventKey="2" as={Link} to="/Tasbeeh">
+          <NavLink eventKey="2" as={Link} to="/tasbeeh">
             Tasbeeh
           </NavLink>
-          <NavLink eventKey="3" as={Link} to="/Calendar">
+          <NavLink eventKey="3" as={Link} to="/calendar">
             Calendar
           </NavLink>
         </Nav>

@@ -9,23 +9,19 @@ import "@/styles/index.css";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-  },
-  {
     path: "/login",
     element: <Login />
   },
   {
-    path: "/home",
+    path: "/",
     element: <Home />,
     children: [
       {
-        path: "Tasbeeh",
+        path: "tasbeeh",
         element: <Tasbeeh />,
       },
       {
-        path: "Calendar",
+        path: "calendar",
         element: <Calendar />,
       },
     ],
