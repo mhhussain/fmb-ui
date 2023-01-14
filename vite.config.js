@@ -46,6 +46,7 @@ export default defineConfig({
       { find: '@/redux', replacement: '/src/redux' },
       { find: '@/styles', replacement: '/src/styles' },
       { find: '@/utils', replacement: '/src/utils' },
+      { find: '@/store', replacement: '/src/store'},
     ],
   },
 })

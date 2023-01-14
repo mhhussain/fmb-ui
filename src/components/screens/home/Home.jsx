@@ -3,26 +3,25 @@ import { Navigate } from "react-router-dom";
 import { useLocation, Outlet } from "react-router-dom";
 import Header from "@/atoms/navigators/Header";
 import "@/styles/Home.css";
+import { useSelector} from "react-redux";
 
-import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
 
 export default function Home() {
-  // TODO: Move to using Redux for state management
-  const {state} = useLocation();
+
+  const loggedIn = useSelector((state) => state.loggedIn.loggedIn);
 
   // If state and memberData does not exist - redirect to /login
-  if (!state || !state.memberData) {
+  if (!loggedIn) {
     return <Navigate to="/login" replace={true} />;
   }
 
-  const { memberData } = state; // Read values passed on state
 
   return (
     <div className="App">
       <Header />
       <h1>FMB</h1>
       <div className="font-black">
-        <p>Logged in as {memberData.FirstName} {memberData.LastName}</p>
+        <p>Logged in</p>
       </div>
       <div>
         <Outlet />

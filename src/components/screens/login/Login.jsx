@@ -1,29 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@/atoms/Alert';
 import "@/styles/Login.css";
-import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
+import { useLoginJamaatMemberByITSIdMutation } from "../../../api/thaaliApi";
+import { useSelector, useDispatch } from "react-redux";
+import { logIn } from "./loginSlice";
 
 export default function Login() {
-  const [token, setToken] = useState(false);
-  const [memberData, setMemberData] = useState();
   const [itsID, setItsID] = useState("");
   const [invalid, setInvalid] = useState(false);
+  const [ login, {data} ] = useLoginJamaatMemberByITSIdMutation();
+  const loggedIn = useSelector((state) => state.loggedIn.loggedIn);
+  const dispatch = useDispatch();
 
-  if (token) {
-    return <Navigate to="/" replace={true} state={{ memberData: memberData }} />;
+
+  if (loggedIn) {
+    return <Navigate to="/" replace={true}/>;
   }
-
+  
   const updateITSValid = async () => {
-    getJamaatMemberByITSId(itsID).then((d) => {
-      setMemberData(d);
-      setToken(true);
-    },
-    () => {
-      setToken(false);
+    const result = await login(itsID);
+    if (result.data.length) {
+      dispatch(logIn(itsID));
+    }
+    else{
       setInvalid(true);
-    });
+    }
   }
 
   const handleClose = (event, reason) => {
