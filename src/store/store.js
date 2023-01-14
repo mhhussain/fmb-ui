@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { api } from '@/api/thaaliApi';
 import { loggedIn } from '@/screens/login/loginSlice';
 
