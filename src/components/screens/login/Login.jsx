@@ -36,6 +36,12 @@ export default function Login() {
     setInvalid(false);
   };
 
+  const handleKeyUp = (e) => {
+    if (e.keyCode === 13) {
+      updateITSValid();
+    }
+  }
+
   return (
     <div className="login-wrapper">
       <h1>FMB (alpha)</h1>
@@ -44,10 +50,11 @@ export default function Login() {
         <input
           type="text"
           onChange={(e) => setItsID(e.target.value)}
+          onKeyUp={handleKeyUp}
         />
       </label>
       <div>
-        <button className="btn btn-primary" onClick={updateITSValid}>
+        <button className="btn btn-primary" onClick={updateITSValid} onKeyUp={handleKeyUp}>
           Login
         </button>
       </div>

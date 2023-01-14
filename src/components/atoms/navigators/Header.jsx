@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Nav, Navbar, NavLink } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { logOut } from "@/screens/login/loginSlice";
 
 export default function Header() {
+  const dispatch = useDispatch();
   return (
     <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
       <Navbar.Toggle
@@ -10,7 +13,7 @@ export default function Header() {
         data-bs-target="#navbarScroll"
       />
       <Navbar.Collapse id="navbarScroll">
-        <Nav>
+        <Nav className="container-fluid">
           <NavLink eventKey="1" as={Link} to="/">
             Home
           </NavLink>
@@ -19,6 +22,11 @@ export default function Header() {
           </NavLink>
           <NavLink eventKey="3" as={Link} to="/calendar">
             Calendar
+          </NavLink>
+          <NavLink  onClick={() => {
+            dispatch(logOut());
+          }}>
+            Logout
           </NavLink>
         </Nav>
       </Navbar.Collapse>
