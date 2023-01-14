@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { dependencies } from './package.json';
 
 const vendor = ['react', 'react-router-dom', 'react-dom'];
@@ -46,7 +46,7 @@ export default defineConfig({
       { find: '@/redux', replacement: '/src/redux' },
       { find: '@/styles', replacement: '/src/styles' },
       { find: '@/utils', replacement: '/src/utils' },
-      { find: '@/store', replacement: '/src/store'},
+      { find: '@/store', replacement: '/src/store' },
     ],
   },
-})
+});

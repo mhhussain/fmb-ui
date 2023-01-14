@@ -16,10 +16,12 @@ class HouseholdFaizUlMawaidProfile extends Audit {
     this.HouseholdFaizUlMawaidProfileID = apiobj.HouseholdFaizUlMawaidProfileID;
     this.Notes = apiobj.Notes;
     this.Household_HouseholdID = apiobj.Household_HouseholdID;
-    this.PrimaryThaaliContact_JamaatMemberID = apiobj.PrimaryThaaliContact_JamaatMemberID;
-    this.SecondaryThaaliContact_JamaatMemberID = apiobj.SecondaryThaaliContact_JamaatMemberID;
+    this.PrimaryThaaliContact_JamaatMemberID =
+      apiobj.PrimaryThaaliContact_JamaatMemberID;
+    this.SecondaryThaaliContact_JamaatMemberID =
+      apiobj.SecondaryThaaliContact_JamaatMemberID;
     this.ThaaliZone_ThaaliZoneID = apiobj.ThaaliZone_ThaaliZoneID;
-  };
-};
+  }
+}
 
 export { schema, HouseholdFaizUlMawaidProfile };

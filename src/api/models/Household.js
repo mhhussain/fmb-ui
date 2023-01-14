@@ -8,7 +8,7 @@ const schema = object({
   StreetAddress2: string().nullable(),
   City: string().nullable(),
   PostalCode: string().nullable(),
-  HeadOfHousehold_JamaatMemberID: number().nullable()
+  HeadOfHousehold_JamaatMemberID: number().nullable(),
 });
 
 class Household extends Audit {
@@ -26,7 +26,7 @@ class Household extends Audit {
     this.CreatedByName = apiobj.CreatedByName;
     this.UpdatedOn = apiobj.UpdatedOn;
     this.UpdatedByName = apiobj.UpdatedByName;
-  };
-};
+  }
+}
 
 export { schema, Household };

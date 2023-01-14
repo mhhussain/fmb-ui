@@ -1,35 +1,35 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Home from "@/screens/home/Home";
-import Login from "@/screens/login/Login";
-import Tasbeeh from "@/screens/tasbeeh/Tasbeeh";
-import Calendar from "@/screens/calendar/Calendar";
-import Query from "@/screens/admin/Query";
+import Home from '@/screens/home/Home';
+import Login from '@/screens/login/Login';
+import Tasbeeh from '@/screens/tasbeeh/Tasbeeh';
+import Calendar from '@/screens/calendar/Calendar';
+import Query from '@/screens/admin/Query';
 
-import "@/styles/index.css";
+import '@/styles/index.css';
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <Login />
+    path: '/login',
+    element: <Login />,
   },
   {
-    path: "/",
+    path: '/',
     element: <Home />,
     children: [
       {
-        path: "tasbeeh",
+        path: 'tasbeeh',
         element: <Tasbeeh />,
       },
       {
-        path: "calendar",
+        path: 'calendar',
         element: <Calendar />,
       },
     ],
   },
   {
-    path: "/admin/query",
-    element: <Query />
-  }
+    path: '/admin/query',
+    element: <Query />,
+  },
 ]);
 
 const Navigation = () => {

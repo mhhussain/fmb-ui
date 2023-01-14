@@ -1,5 +1,5 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import { api } from "@/api/thaaliApi";
+import { api } from '@/api/thaaliApi';
 import { loggedIn } from '@/screens/login/loginSlice';
 
 export const store = configureStore({
@@ -7,5 +7,6 @@ export const store = configureStore({
     loggedIn: loggedIn.reducer,
     [api.reducerPath]: api.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
-})
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(api.middleware),
+});

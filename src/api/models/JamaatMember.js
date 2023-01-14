@@ -12,7 +12,7 @@ const schema = object({
   Title: string().nullable(),
   Household_HouseholdID: number(),
   RelationshipToHeadOfHousehold_RelationshipTypeID: number(),
-  UserRole_UserRoleID: number()
+  UserRole_UserRoleID: number(),
 });
 
 class JamaatMember extends Audit {
@@ -27,13 +27,14 @@ class JamaatMember extends Audit {
     this.Email = apiobj.Email;
     this.Title = apiobj.Title;
     this.Household_HouseholdID = apiobj.Household_HouseholdID;
-    this.RelationshipToHeadOfHousehold_RelationshipTypeID = apiobj.RelationshipToHeadOfHousehold_RelationshipTypeID;
+    this.RelationshipToHeadOfHousehold_RelationshipTypeID =
+      apiobj.RelationshipToHeadOfHousehold_RelationshipTypeID;
     this.UserRole_UserRoleID = apiobj.UserRole_UserRoleID;
     this.CreatedOn = apiobj.CreatedOn;
     this.CreatedByName = apiobj.CreatedByName;
     this.UpdatedOn = apiobj.UpdatedOn;
     this.UpdatedByName = apiobj.UpdatedByName;
-  };
-};
+  }
+}
 
 export { schema, JamaatMember };

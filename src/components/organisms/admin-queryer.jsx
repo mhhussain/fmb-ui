@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const AdminQuery = (props) => {
   const { queryName, req } = props;
@@ -10,9 +10,9 @@ const AdminQuery = (props) => {
 
   const handleReq = async () => {
     req(input).then((d) => {
-      setOutput(JSON.stringify(d, null, 4))
+      setOutput(JSON.stringify(d, null, 4));
     });
-  }
+  };
 
   return (
     <div className="output">

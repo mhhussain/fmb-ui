@@ -1,9 +1,8 @@
-import { useState } from "react";
-import Header from "@/atoms/navigators/Header";
-import AdminQuery from "@/organisms/admin-queryer";
+import { useState } from 'react';
+import Header from '@/atoms/navigators/Header';
+import AdminQuery from '@/organisms/admin-queryer';
 
-import "@/styles/Home.css";
-
+import '@/styles/Home.css';
 
 export default function Query() {
   return (

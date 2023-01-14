@@ -1,10 +1,10 @@
 import { object, string } from 'yup';
 
 const schema = object({
-    CreatedOn: string().nullable(),
-    CreatedByName: string().nullable(),
-    UpdatedOn: string().nullable(),
-    UpdatedByName: string().nullable(),
+  CreatedOn: string().nullable(),
+  CreatedByName: string().nullable(),
+  UpdatedOn: string().nullable(),
+  UpdatedByName: string().nullable(),
 });
 
 class Audit {
@@ -13,7 +13,7 @@ class Audit {
     this.CreatedByName = apiobj.CreatedByName;
     this.UpdatedOn = apiobj.UpdatedOn;
     this.UpdatedByName = apiobj.UpdatedByName;
-  };
-};
+  }
+}
 
 export { schema, Audit };

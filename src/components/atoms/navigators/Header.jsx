@@ -1,12 +1,18 @@
-import { Link } from "react-router-dom";
-import { Nav, Navbar, NavLink } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { logOut } from "@/screens/login/loginSlice";
+import { Link } from 'react-router-dom';
+import { Nav, Navbar, NavLink } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { logOut } from '@/screens/login/loginSlice';
 
 export default function Header() {
   const dispatch = useDispatch();
   return (
-    <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark" className="sticky-top">
+    <Navbar
+      collapseOnSelect
+      expand="sm"
+      bg="dark"
+      variant="dark"
+      className="sticky-top"
+    >
       <Navbar.Toggle
         aria-controls="navbarScroll"
         data-bs-toggle="collapse"
@@ -23,9 +29,11 @@ export default function Header() {
           <NavLink eventKey="3" as={Link} to="/calendar">
             Calendar
           </NavLink>
-          <NavLink  onClick={() => {
-            dispatch(logOut());
-          }}>
+          <NavLink
+            onClick={() => {
+              dispatch(logOut());
+            }}
+          >
             Logout
           </NavLink>
         </Nav>

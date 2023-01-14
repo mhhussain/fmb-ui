@@ -1,19 +1,19 @@
-import axios from "axios";
-import { createApi } from "@reduxjs/toolkit/query/react";
+import axios from 'axios';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   JamaatMember,
   schema as jamaatMemberSchema,
-} from "@/api/models/JamaatMember";
-import { Household, schema as householdSchema } from "@/api/models/Household";
+} from '@/api/models/JamaatMember';
+import { Household, schema as householdSchema } from '@/api/models/Household';
 import {
   HouseholdFaizUlMawaidProfile,
   schema as householdFaizUlMawaidProfileSchema,
-} from "@/api/models/HouseholdFaizUlMawaidProfile";
+} from '@/api/models/HouseholdFaizUlMawaidProfile';
 
 const API_ENDPOINT = `https://test-thaali-api.herokuapp.com/api/db`;
 
 const axiosBaseQuery =
-  ({ baseUrl } = { baseUrl: "" }) =>
+  ({ baseUrl } = { baseUrl: '' }) =>
   async ({ url, method, data, params }) => {
     try {
       const result = await axios({ url: baseUrl + url, method, data, params });
@@ -30,28 +30,29 @@ const axiosBaseQuery =
   };
 
 export const api = createApi({
-  reducerPath: "api",
+  reducerPath: 'api',
   baseQuery: axiosBaseQuery({
     baseUrl: API_ENDPOINT,
   }),
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getJamaatMemberByITSId: builder.query({
-      query: itsId => ({
+      query: (itsId) => ({
         url: `/JamaatMembers?ItsID=${itsId}`,
-        method: "get",
+        method: 'get',
       }),
     }),
     loginJamaatMemberByITSId: builder.mutation({
-      async queryFn(arg, _queryApi, _extraOptions, fetchWithBQ){
+      async queryFn(arg, _queryApi, _extraOptions, fetchWithBQ) {
         const result = await fetchWithBQ({
           url: `/JamaatMembers?ItsID=${arg}`,
-          method: "get", });
+          method: 'get',
+        });
         try {
           await jamaatMemberSchema.validate(result.data[0]);
         } catch (error) {
-          return {error: JSON.stringify(error)};
+          return { error: JSON.stringify(error) };
         }
-        return {data: JSON.stringify(new JamaatMember(result.data[0]))};
+        return { data: JSON.stringify(new JamaatMember(result.data[0])) };
       },
     }),
   }),
@@ -91,4 +92,7 @@ const getFMBProfileByHouseholdId = async (householdId) => {
   return new HouseholdFaizUlMawaidProfile(res);
 };
 
-export const { useGetJamaatMemberByITSIdQuery, useLoginJamaatMemberByITSIdMutation } = api;
+export const {
+  useGetJamaatMemberByITSIdQuery,
+  useLoginJamaatMemberByITSIdMutation,
+} = api;
