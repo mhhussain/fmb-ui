@@ -6,7 +6,7 @@ import { logOut } from "@/screens/login/loginSlice";
 export default function Header() {
   const dispatch = useDispatch();
   return (
-    <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
+    <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark" className="sticky-top">
       <Navbar.Toggle
         aria-controls="navbarScroll"
         data-bs-toggle="collapse"
