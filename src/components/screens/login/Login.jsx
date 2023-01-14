@@ -20,11 +20,10 @@ export default function Login() {
   }
   
   const updateITSValid = async () => {
-    const result = await login(itsID);
-    if (result.data.length) {
+    try {
+      const result = await login(itsID).unwrap();
       dispatch(logIn(itsID));
-    }
-    else{
+    } catch (error) {
       setInvalid(true);
     }
   }

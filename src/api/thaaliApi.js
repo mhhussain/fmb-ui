@@ -39,15 +39,20 @@ export const api = createApi({
       query: itsId => ({
         url: `/JamaatMembers?ItsID=${itsId}`,
         method: "get",
-        returnModel: JamaatMember,
       }),
     }),
     loginJamaatMemberByITSId: builder.mutation({
-      query: itsId => ({
-        url: `/JamaatMembers?ItsID=${itsId}`,
-        method: "get",
-        returnModel: JamaatMember,
-      }),
+      async queryFn(arg, _queryApi, _extraOptions, fetchWithBQ){
+        const result = await fetchWithBQ({
+          url: `/JamaatMembers?ItsID=${arg}`,
+          method: "get", });
+        try {
+          await jamaatMemberSchema.validate(result.data[0]);
+        } catch (error) {
+          return {error: JSON.stringify(error)};
+        }
+        return {data: JSON.stringify(new JamaatMember(result.data[0]))};
+      },
     }),
   }),
 });
