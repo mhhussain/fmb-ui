@@ -2,6 +2,7 @@ import axios from "axios";
 import { JamaatMember, schema as jamaatMemberSchema } from '@/api/models/JamaatMember';
 import { Household, schema as householdSchema } from '@/api/models/Household';
 import { HouseholdFaizUlMawaidProfile, schema as householdFaizUlMawaidProfileSchema } from '@/api/models/HouseholdFaizUlMawaidProfile';
+import { WeeklyMenu, schema as weeklyMenuSchema } from '@/api/models/WeeklyMenu';
 
 const API_ENDPOINT = `https://test-thaali-api.herokuapp.com/api/db`;
 
@@ -30,10 +31,20 @@ const getFMBProfileByHouseholdId = async (householdId) => {
   await householdFaizUlMawaidProfileSchema.validate(res);
   // Return new mapped object
   return new HouseholdFaizUlMawaidProfile(res);
-}
+};
+
+const getWeeks = async () => {
+  // Retrieve data
+  const res = (await axios.get(`${API_ENDPOINT}/WeeklyMenu`)).data;
+  // Validate response
+  res.forEach(async (v) => await weeklyMenuSchema.validate(v));
+  // Return new mapped object
+  return new WeeklyMenu(res);
+};
 
 export {
   getJamaatMemberByITSId,
   getHouseholdById,
-  getFMBProfileByHouseholdId
+  getFMBProfileByHouseholdId,
+  getWeeks,
 };
