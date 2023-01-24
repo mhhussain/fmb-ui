@@ -1,8 +1,8 @@
-import { object, string, date, boolean } from 'yup';
+import { object, string, number, date, boolean } from 'yup';
 import { Audit } from '@/models/Audit';
 
 const schema = object({
-  WeeklyMenuID: string().required(),
+  WeeklyMenuID: number().required(),
   WeekStart: date().nullable(),
   CutoffDateAndTime: date().required(),
   SpecialNote: string().nullable(),

@@ -2,7 +2,7 @@ import { object, string, number } from 'yup';
 import { Audit } from '@/models/Audit';
 
 const schema = object({
-  HouseholdFaizUlMawaidProfileID: string().required(),
+  HouseholdFaizUlMawaidProfileID: number().required(),
   Notes: string().nullable(),
   Household_HouseholdID: number().required(),
   PrimaryThaaliContact_JamaatMemberID: number().nullable(),
