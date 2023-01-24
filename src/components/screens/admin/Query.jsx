@@ -10,6 +10,7 @@ import {
   getFMBProfileByHouseholdId,
   getWeeks,
   getFillSchedulesByWeeklyMenuId,
+  getDailyMenusByFillScheduleId,
 } from "@/api/thaaliApi";
 
 export default function Query() {
@@ -22,6 +23,7 @@ export default function Query() {
       <AdminQuery queryName="getFMBProfileByHouseholdId" req={getFMBProfileByHouseholdId} />
       <AdminQuery queryName="getWeeks" req={getWeeks} />
       <AdminQuery queryName="getFillSchedulesByWeeklyMenuId" req={getFillSchedulesByWeeklyMenuId} />
+      <AdminQuery queryName="getDailyMenusByFillScheduleId" req={getDailyMenusByFillScheduleId} />
     </div>
   );
 }

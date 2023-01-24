@@ -4,6 +4,7 @@ import { Household, schema as householdSchema } from '@/api/models/Household';
 import { HouseholdFaizUlMawaidProfile, schema as householdFaizUlMawaidProfileSchema } from '@/api/models/HouseholdFaizUlMawaidProfile';
 import { WeeklyMenu, schema as weeklyMenuSchema } from '@/api/models/WeeklyMenu';
 import { FillSchedules, schema as fillSchedulesSchema } from '@/api/models/FillSchedules';
+import { DailyMenu, schema as dailyMenuSchema } from '@/api/models/DailyMenu';
 
 const API_ENDPOINT = `https://test-thaali-api.herokuapp.com/api/db`;
 
@@ -49,9 +50,17 @@ const getFillSchedulesByWeeklyMenuId = async (menuId) => {
   // Validate response
   res.forEach(async (v) => await fillSchedulesSchema.validate(v));
   // Return new mapped object
-  console.log(res);
   return new FillSchedules(res);
-}
+};
+
+const getDailyMenusByFillScheduleId = async (fillingId) => {
+  // Retrieve data
+  const res = (await axios.get(`${API_ENDPOINT}/DailyMenus?FillSchedule_FillScheduleID=${fillingId}`)).data;
+  // Validate response
+  res.forEach(async (v) => await dailyMenuSchema.validate(v));
+  // Return new mapped object
+  return new DailyMenu(res);
+};
 
 export {
   getJamaatMemberByITSId,
@@ -59,4 +68,5 @@ export {
   getFMBProfileByHouseholdId,
   getWeeks,
   getFillSchedulesByWeeklyMenuId,
+  getDailyMenusByFillScheduleId,
 };
