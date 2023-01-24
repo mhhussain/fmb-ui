@@ -11,6 +11,7 @@ import {
   getWeeks,
   getFillSchedulesByWeeklyMenuId,
   getDailyMenusByFillScheduleId,
+  getDailyMenuItemsByDailyMenu,
 } from "@/api/thaaliApi";
 
 export default function Query() {
@@ -24,6 +25,7 @@ export default function Query() {
       <AdminQuery queryName="getWeeks" req={getWeeks} />
       <AdminQuery queryName="getFillSchedulesByWeeklyMenuId" req={getFillSchedulesByWeeklyMenuId} />
       <AdminQuery queryName="getDailyMenusByFillScheduleId" req={getDailyMenusByFillScheduleId} />
+      <AdminQuery queryName="getDailyMenuItemsByDailyMenu" req={getDailyMenuItemsByDailyMenu} />
     </div>
   );
 }
