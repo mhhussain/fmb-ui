@@ -47,7 +47,7 @@ export default function Home() {
           ?.map(menu => (
           <TimelineItem key={menu.DailyMenuID}>
             <TimelineOppositeContent>
-              <Typography>{ menu.fillDate.toFormat('cccc') }</Typography>
+              <Typography>Filling on { menu.fillDate.toFormat('cccc') }</Typography>
               <Typography>{ menu.date.toLocaleString() }</Typography>
             </TimelineOppositeContent>
             <TimelineSeparator>
