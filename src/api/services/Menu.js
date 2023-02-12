@@ -13,7 +13,7 @@ const getWeeklyMenus = async (date) => {
     const week = (await getWeeks()).find(w => Interval.fromDateTimes(DateTime.fromISO(w.WeekStart), DateTime.fromISO(w.WeekStart).endOf('week')).contains(date));
 
     // If no menus for the week, return empty array
-    if (week.length < 1) return [];
+    if (!week || week.length < 1) return [];
 
     const fillSchedules = await getFillSchedulesByWeeklyMenuId(week.WeeklyMenuID);
     let menus = [];
