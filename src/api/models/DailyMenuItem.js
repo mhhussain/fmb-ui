@@ -3,7 +3,7 @@ import { Audit } from '@/models/Audit';
 
 const schema = object({
   DailyMenuItemID: number().required(),
-  Description: string().required(),
+  Description: string().nullable(),
   DailyMenu_DailyMenuID: number().required(),
 });
 

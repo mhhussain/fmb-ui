@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@/atoms/Alert';
 import "@/styles/Login.css";
-import { getJamaatMemberByITSId } from "../../../api/thaaliApi";
+import { getMumineenByITSID } from "@/api/services/Mumineen";
 
 export default function Login() {
   const [token, setToken] = useState(false);
@@ -16,7 +16,7 @@ export default function Login() {
   }
 
   const updateITSValid = async () => {
-    getJamaatMemberByITSId(itsID).then((d) => {
+    getMumineenByITSID(itsID).then((d) => {
       setMemberData(d);
       setToken(true);
     },

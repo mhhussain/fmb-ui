@@ -8,6 +8,16 @@ import { DailyMenu, schema as dailyMenuSchema } from '@/api/models/DailyMenu';
 import { DailyMenuItem, schema as dailyMenuItemSchema } from '@/api/models/DailyMenuItem';
 
 const API_ENDPOINT = `https://test-thaali-api.herokuapp.com/api/db`;
+//const API_ENDPOINT = `http://localhost:3002/api/db`;
+
+const getJamaatMemberById = async (jamaatMemberId) => {
+  // Retrieve data
+  const res = (await axios.get(`${API_ENDPOINT}/JamaatMembers?JamaatMemberID=${jamaatMemberId}`)).data[0];
+  // Validate response
+  await jamaatMemberSchema.validate(res);
+  // Return new mapped object
+  return new JamaatMember(res);
+};
 
 const getJamaatMemberByITSId = async (itsId) => {
   // Retrieve data
@@ -16,6 +26,15 @@ const getJamaatMemberByITSId = async (itsId) => {
   await jamaatMemberSchema.validate(res);
   // Return new mapped object
   return new JamaatMember(res);
+};
+
+const getJamaatMembersByHouseholdId = async (householdId) => {
+  // Retrieve data
+  const res = (await axios.get(`${API_ENDPOINT}/JamaatMembers?Household_HouseholdID=${householdId}`)).data;
+  // Validate response
+  await res.map(async v => await jamaatMemberSchema.validate(v));
+  // Return new mapped object
+  return await res.map(v => new JamaatMember(v));
 };
 
 const getHouseholdById = async (householdId) => {
@@ -42,7 +61,7 @@ const getWeeks = async () => {
   // Validate response
   res.forEach(async (v) => await weeklyMenuSchema.validate(v));
   // Return new mapped object
-  return new WeeklyMenu(res);
+  return await res.map(v => new WeeklyMenu(v));
 };
 
 const getFillSchedulesByWeeklyMenuId = async (menuId) => {
@@ -51,7 +70,7 @@ const getFillSchedulesByWeeklyMenuId = async (menuId) => {
   // Validate response
   res.forEach(async (v) => await fillSchedulesSchema.validate(v));
   // Return new mapped object
-  return new FillSchedules(res);
+  return await res.map(v => new FillSchedules(v));
 };
 
 const getDailyMenusByFillScheduleId = async (fillingId) => {
@@ -60,7 +79,7 @@ const getDailyMenusByFillScheduleId = async (fillingId) => {
   // Validate response
   res.forEach(async (v) => await dailyMenuSchema.validate(v));
   // Return new mapped object
-  return new DailyMenu(res);
+  return await res.map(v => new DailyMenu(v));
 };
 
 const getDailyMenuItemsByDailyMenu = async (dailyMenuId) => {
@@ -69,11 +88,13 @@ const getDailyMenuItemsByDailyMenu = async (dailyMenuId) => {
   // Validate response
   res.forEach(async (v) => await dailyMenuItemSchema.validate(v));
   // Return new mapped object
-  return new DailyMenuItem(res);
+  return await res.map(v => new DailyMenuItem(v));
 }
 
 export {
+  getJamaatMemberById,
   getJamaatMemberByITSId,
+  getJamaatMembersByHouseholdId,
   getHouseholdById,
   getFMBProfileByHouseholdId,
   getWeeks,
