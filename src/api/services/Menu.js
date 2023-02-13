@@ -10,7 +10,7 @@ import { DateTime, Interval } from "luxon";
 import { MenuViewModel } from "@/api/models/viewmodels/MenuViewModel";
 
 const getWeeklyMenus = async (date) => {
-    const week = (await getWeeks()).find(w => Interval.fromDateTimes(DateTime.fromISO(w.WeekStart), DateTime.fromISO(w.WeekStart).endOf('week')).contains(date));
+    const week = (await getWeeks()).find(w => Interval.fromDateTimes(DateTime.fromISO(w.WeekStart).startOf('week'), DateTime.fromISO(w.WeekStart).endOf('week')).contains(date));
 
     // If no menus for the week, return empty array
     if (!week || week.length < 1) return [];
