@@ -4,13 +4,17 @@ import { useLocation, Outlet } from "react-router-dom";
 import Header from "@/atoms/navigators/Header";
 import "@/styles/Home.css";
 
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineOppositeContent, {
+  timelineOppositeContentClasses,
+} from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineDot from '@mui/lab/TimelineDot';
@@ -32,20 +36,11 @@ export default function Home() {
 
   const { memberData } = state; // Read values passed on state
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const lastweek = await getWeeklyMenus(DateTime.now().minus({ weeks: 1 }));
-      const thisweek = await getWeeklyMenus(DateTime.now());
-
-      setState({
-        ...state,
-        weeks: [lastweek, thisweek],
-      });
-    };
-
-    fetchData();
-  }, []);
-
+  // Week is a list of Menus, this function groups
+  // together the daily menus based on their filling
+  // dates.
+  // I.e. Monday and Tuesday menu are grouped into
+  // Monday for filling
   const weekToFillTimeline = (week) => {
     return week?.reduce((x, menu, i) => {
       if(!x[menu.fillDate.toFormat('cccc')]) {
@@ -53,8 +48,25 @@ export default function Home() {
       }
       x[menu.fillDate.toFormat('cccc')].push(menu);
       return x;
-    }, {})
-  }
+    }, {});
+  };
+
+  // useEffect hook for fetching data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      //const lastweek = await getWeeklyMenus(DateTime.now().minus({ weeks: 1 }));
+      const thisweek = await getWeeklyMenus(DateTime.now());
+      const nextweek = await getWeeklyMenus(DateTime.now().plus({ weeks: 1 }));
+
+      setState({
+        ...state,
+        //weeks: [lastweek, thisweek],
+        weeks: [thisweek, nextweek],
+      });
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="App">
@@ -62,16 +74,26 @@ export default function Home() {
       <h1>FMB</h1>
       {state.weeks?.map(week => (
         <div>
-          <Typography>Week of {week[0].fillDate.startOf('week').toLocaleString()}</Typography>
-          <Timeline>
+          {Interval.fromDateTimes(DateTime.fromISO(week[0].fillDate).startOf('week'), DateTime.fromISO(week[0].fillDate).endOf('week')).contains(DateTime.now())
+            &&
+            <Typography>This Week</Typography>
+          }
+          <Typography>{week[0].fillDate.startOf('week').toFormat('L/d')} - {week[0].fillDate.endOf('week').toFormat('L/d')}</Typography>
+          <Timeline
+            sx={{
+              [`& .${timelineOppositeContentClasses.root}`]: {
+                flex: 0.2,
+              },
+            }}
+          >
             {week && Object.values(weekToFillTimeline(week))
               ?.map(menus => (
                 <TimelineItem key={menus[0].DailyMenuID}>
                     <TimelineOppositeContent
                       sx={{ m: 'auto 0' }}
                     >
-                      <Typography><strong>{ menus[0].fillDate.toFormat('cccc') }</strong></Typography>
-                      <Typography>{ menus[0].date.toLocaleString() }</Typography>
+                      <Typography><strong>{ menus[0].fillDate.toFormat('ccc') }</strong></Typography>
+                      <Typography>{ menus[0].date.toFormat('L/d') }</Typography>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
                       <TimelineConnector />
@@ -84,15 +106,17 @@ export default function Home() {
                       <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
+                      <Box sx={{ my: 2 }}>
                       {menus?.map(menu =>
                       (
-                        <div>
+                        <Box sx={{ mb: 1 }}>
                           <Typography key={menu.DailyMenuID}><strong>{menu.date.toFormat('cccc')}</strong></Typography>
                           {menu.items.map(item => (
                             <Typography key={`${menu.DailyMenuID}_${item}`}>{ item }</Typography>
                           ))}
-                        </div>
+                        </Box>
                       ))}
+                      </Box>
                     </TimelineContent>
                 </TimelineItem>
               )
