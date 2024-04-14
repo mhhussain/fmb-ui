@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    Dashboard View
+    Menu View
   </v-app>
 </template>
 

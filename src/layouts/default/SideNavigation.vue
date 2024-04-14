@@ -1,17 +1,27 @@
 <template>
   <v-navigation-drawer>
-    <v-list-item title="Detroit FMB"></v-list-item>
-    <v-divider />
-    <v-list-item title="Dashboard" />
-    <v-list-item title="Menu" />
-    <v-list-item title="Vendors" />
-    <v-list-item title="Members" />
-    <v-list-item title="Budget" />
-    <v-list-item title="Thaali Counts" />
-    <v-list-item title="Feedback" />
+    <v-list-item
+      v-for="link in links"
+      :key="link.title"
+      :to="link.path"
+      link
+      :value="$route.path === link.path"
+    >
+      {{ link.title }}
+    </v-list-item>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-    //
+import { ref } from 'vue';
+
+const links = ref([
+  { title: 'Dashboard', path: 'dashboard'},
+  { title: 'Menu', path: 'menu'},
+  { title: 'Vendors', path: 'vendors'},
+  { title: 'Members', path: 'members'},
+  { title: 'Budget', path: 'budget'},
+  { title: 'Thaali Counts', path: 'thaali'},
+  { title: 'Feedback', path: 'feedback'},
+])
 </script>
