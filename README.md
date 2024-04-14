@@ -1,5 +1,11 @@
 # essentials
 
+## Deploy to Firebase
+
+1. `firebase deploy --only hosting`
+
+See: https://cli.vuejs.org/guide/deployment.html#firebase
+
 ## Project setup
 
 ```
