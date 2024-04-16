@@ -5,7 +5,7 @@
         <!-- Header with logo and greeting -->
         <v-row>
           <v-col cols="12" sm="6">
-            Dashboardheawoifejwaoifjewoajfeoiw
+            Dashboard
           </v-col>
           <v-col cols="12" sm="6">
             Filter Period
