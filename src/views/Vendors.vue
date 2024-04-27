@@ -69,7 +69,7 @@ const headers = ref([
   { title: 'Vendor Name', value: 'VendorName' },
   { title: 'Units', value: 'Units' },
   { title: 'UnitCost', value: 'UnitCost' },
-  { title: 'Edit', value: 'Edit' },
+  { title: '', value: 'Edit' },
 ]);
 
 const data = computed(() => {
@@ -97,18 +97,18 @@ const vendorNames = computed(() => {
         VendorID: v.VendorID,
         VendorName: v.VendorName,
       };
-    })
+    }),
   ];
 });
 
 const router = useRouter();
 
-function editVendor(item) {
+const editVendor = (item) => {
   alert('TODO: route to edit vendor screen');
   // router.push({ name: '', params: { id: item.id } });
 };
 
-function editItem(item) {
+const editItem = (item) => {
   alert('TODO: route to edit item screen');
   // router.push({ name: '', params: { id: item.id } });
 };
