@@ -11,12 +11,20 @@
       label="Show Inactive"
       v-model="showInactive"
     />
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Search"
+      single-line
+      hide-details
+    />
     <v-data-table
       :headers="headers"
       :items="data"
       class="elevation-1"
       :hide-default-footer="true"
       :loading="loading"
+      :search="search"
     >
       <template v-slot:loading>
         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
@@ -31,7 +39,7 @@
           mdi-pencil
         </v-icon>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:item.Edit="{ item }">
         <v-icon
           class="me-2"
           size="small"
@@ -52,6 +60,7 @@ import { useAppStore } from '@/store/app';
 const store = useAppStore();
 
 const loading = ref(false);
+const search = ref('');
 const selectedVendor = ref('All');
 const showInactive = ref(false);
 
@@ -60,7 +69,7 @@ const headers = ref([
   { title: 'Vendor Name', value: 'VendorName' },
   { title: 'Units', value: 'Units' },
   { title: 'UnitCost', value: 'UnitCost' },
-  { title: 'Actions', value: 'actions' },
+  { title: 'Edit', value: 'Edit' },
 ]);
 
 const data = computed(() => {
@@ -133,4 +142,11 @@ onMounted(async () => {
   max-width: 500px;
   overflow: hidden;
 }
+
+.v-text-field {
+  max-height: 75px;
+  max-width: 500px;
+  overflow: hidden;
+}
+
 </style>
