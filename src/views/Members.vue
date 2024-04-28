@@ -27,6 +27,16 @@
           {{ `${m.Title ? m.Title + ' ' : ''}${m.FirstName} ${m.MiddleName ? m.MiddleName + ' ' : ''}${m.LastName}` }}
         </p>
       </template>
+      <template v-slot:item.Address="{ item }">
+        <p>{{ item.StreetAddress1 }}</p>
+        <p>{{ item.StreetAddress2 }}</p>
+        <p>{{ item.City }}, {{ item.State }} {{ item.PostalCode }}</p>
+      </template>
+      <template v-slot:item.Preferences="{ item }">
+        <v-icon :color="item.MondayOptIn ? 'green' : 'red'">{{ item.MondayOptIn ? `mdi-alpha-${item.MondayPreference.toLowerCase()}` : 'mdi-alpha-x' }}</v-icon>
+        <v-icon :color="item.WednesdayOptIn ? 'green' : 'red'">{{ item.WednesdayOptIn ? `mdi-alpha-${item.WednesdayPreference.toLowerCase()}` : 'mdi-alpha-x' }}</v-icon>
+        <v-icon :color="item.SaturdayOptIn ? 'green' : 'red'">{{ item.SaturdayOptIn ? `mdi-alpha-${item.SaturdayPreference.toLowerCase()}` : 'mdi-alpha-x' }}</v-icon>
+      </template>
       <template v-slot:item.Edit="{ item }">
         <v-icon
           class="me-2"
@@ -50,37 +60,46 @@ const search = ref('');
 const store = useAppStore();
 
 const headers = ref([
-  { title: 'HOF Its ID', value: 'ItsID' },
-  { title: 'HOF', value: 'Household' },
-  { title: 'Size', value: 'Size' },
+  { title: 'Thaali Number', value: 'ThaaliNumber' },
+  // { title: 'HOF Its ID', value: 'HoHITSID' },
+  // { title: 'HOF', value: 'Household' },
+  { title: 'Zone', value: 'Zone' },
+  { title: 'Address', value: 'Address' },
+  { title: 'Household Size', value: 'Size' },
   { title: 'Members', value: 'Members' },
-  { title: 'Primary Contact Phone', value: 'PrimaryContactPhone' },
-  { title: 'Primary Contact Email', value: 'PrimaryContactEmail' },
+  { title: 'Preferences', value: 'Preferences' },
   { title: '', value: 'Edit' },
 ]);
 
 const data = computed(() => {
-  return mumineen.value
-    .filter(m => { return m.RelationshipToHeadOfHousehold_RelationshipTypeID === 1 })
-    .map(m => {
+  return households.value
+    .map(h => {
       return {
-        ...m,
-        household: households.value.find(h => h.Household_HouseholdID === m.Household_HouseholdID),
-      };
-    })
-    .map(m => {
-      return {
-        ItsID: m.ItsID,
-        Household: `${m.Title ? m.Title + ' ' : ''}${m.FirstName} ${m.MiddleName ? m.MiddleName + ' ' : ''}${m.LastName}`,
-        Members: mumineen.value.filter(i => { return m.Household_HouseholdID === i.Household_HouseholdID }),
-        PrimaryContactPhone: mumineen.value.find(i => { return m.household?.PrimaryThaaliContact_JamaatMemberID === i.JamaatMemberID })?.Phone,
-        PrimaryContactEmail: mumineen.value.find(i => { return m.household?.PrimaryThaaliContact_JamaatMemberID === i.JamaatMemberID })?.Email,
+        ThaaliNumber: h.ThaaliNumber,
+        HoHITSID: h.HoHITSID,
+        Household: `${h.HoHFirstName} ${h.HoHLastName}`,
+        Members: mumineen.value.filter(m => { return m.Household_HouseholdID === h.HouseholdID }),
+        PrimaryContactPhone: h.PrimarayContactCellPhone,
+        PrimaryContactEmail: h.PrimaryContactEmail,
+        MondayOptIn: h.MondayOptIn === 1 ? true : false,
+        MondayPreference: h.MondayPreference,
+        WednesdayOptIn: h.WednesdayOptIn === 1 ? true : false,
+        WednesdayPreference: h.WednesdayPreference,
+        SaturdayOptIn: h.SaturdayOptIn === 1 ? true : false,
+        SaturdayPreference: h.SaturdayPreference,
+        StreetAddress1: h.StreetAddress1,
+        StreetAddress2: h.StreetAddress2,
+        City: h.City,
+        State: h.State,
+        PostalCode: h.PostalCode,
+        Zone: h.Zone,
+        ZoneCoordinator: `${h.ZoneCoordinatorFirstName} ${h.ZoneCoordinatorLastName}`
       }
     });
 });
 
 const editItem = (item) => {
-  alert('TODO: route to edit mumineen screen');
+  alert('TODO: route to edit household screen');
 };
 
 // Data
