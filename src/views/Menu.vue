@@ -5,5 +5,11 @@
 </template>
 
 <script setup>
-  // import HelloWorld from '@/components/HelloWorld.vue'
+import { onMounted } from 'vue';
+import getWeeksListUseCase from '../domain/usecases/get_weeks_list_usecase';
+
+onMounted(async () => {
+  const x = await getWeeksListUseCase.call();
+  console.log(x[0]);
+});
 </script>

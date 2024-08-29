@@ -16,12 +16,6 @@
 import { ref } from 'vue';
 
 const links = ref([
-  { title: 'Dashboard', path: 'dashboard'},
   { title: 'Menu', path: 'menu'},
-  { title: 'Vendors', path: 'vendors'},
-  { title: 'Members', path: 'members'},
-  { title: 'Budget', path: 'budget'},
-  { title: 'Thaali Counts', path: 'thaali'},
-  { title: 'Feedback', path: 'feedback'},
 ])
 </script>
