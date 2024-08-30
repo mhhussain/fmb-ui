@@ -10,19 +10,25 @@
         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
       </template>
       <template v-slot:item.week="{ item }">
-        <span>Monday {{ item.mondayItemCount }}</span>
-        <span>Tuesday {{ item.tuesdayItemCount }}</span>
-        <span>Wednesday {{ item.wednesdayItemCount }}</span>
-        <span>Thursday {{ item.thursdayItemCount }}</span>
-        <span>Friday {{ item.fridayItemCount }}</span>
-        <span>Saturday {{ item.saturdayItemCount }}</span>
-        <span>Sunday {{ item.sundayItemCount }}</span>
+        <WeekSummaryTableRow :week="item" />
       </template>
       <template v-slot:item.icons="{ item }">
-        <v-icon @click="onClickViewWeek(item)">mdi-view-week</v-icon>
-        <v-icon @click="onClickEmailSend(item)">{{ item.emailSent ? 'mdi-email-check-outline' : 'mdi-email-alert-outline' }}</v-icon>
-        <v-icon @click="onClickFillReports(item)">mdi-file-chart-outline</v-icon>
-        <v-icon @click="onClickEdit(item)">mdi-pencil</v-icon>
+        <v-btn>
+          <v-icon>mdi-view-week</v-icon>
+          <v-overlay
+            activator="parent"
+            class="align-center justify-center"
+          >
+            <WeekSummary :week="item" />
+          </v-overlay>
+        </v-btn>
+        <v-btn
+          @click="onClickEmailSend(item)"
+          :color="item.emailSent ? 'green' : 'red'"
+          :icon="item.emailSent ? 'mdi-email-check-outline' : 'mdi-email-alert-outline'"
+        ></v-btn>
+        <v-btn icon="mdi-file-chart-outline" @click="onClickFillReports(item)"></v-btn>
+        <v-btn icon="mdi-pencil" @click="onClickEdit(item)"></v-btn>
       </template>
     </v-data-table>
   </v-app>
@@ -31,6 +37,8 @@
 <script setup>
 import { onMounted, computed, ref } from 'vue';
 import getWeeksListUseCase from '../domain/usecases/get_weeks_list_usecase';
+import WeekSummaryTableRow from '@/components/organisms/WeekSummaryTableRow.vue';
+import WeekSummary from '@/components/organisms/WeekSummary.vue';
 
 const loading = ref(false);
 
