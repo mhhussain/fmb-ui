@@ -36,6 +36,7 @@
 
 <script setup>
 import { onMounted, computed, ref } from 'vue';
+import { DateTime } from 'luxon';
 import getWeeksListUseCase from '../domain/usecases/get_weeks_list_usecase';
 import WeekSummaryTableRow from '@/components/organisms/WeekSummaryTableRow.vue';
 import WeekSummary from '@/components/organisms/WeekSummary.vue';
@@ -49,7 +50,20 @@ const headers = [
   { title: '', 'value': 'icons' },
 ];
 
-const datagriditems = computed(() => weeks.value);
+const datagriditems = computed(() => weeks.value.map((week) => {
+  return {
+    weekStart: DateTime.fromSQL(week.weekStart).toFormat('DD'),
+    cutoffDateTime: DateTime.fromSQL(week.cutoffDateTime).toFormat('t - ccc, L/d'),
+    emailSent: week.emailSent,
+    mondayItemCount: week.mondayItemCount,
+    tuesdayItemCount: week.tuesdayItemCount,
+    wednesdayItemCount: week.wednesdayItemCount,
+    thursdayItemCount: week.thursdayItemCount,
+    fridayItemCount: week.fridayItemCount,
+    saturdayItemCount: week.saturdayItemCount,
+    sundayItemCount: week.sundayItemCount,
+  }
+}));
 
 const onClickViewWeek = (week) => {
   alert('view week summary');
