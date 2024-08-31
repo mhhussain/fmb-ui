@@ -36,10 +36,13 @@
 
 <script setup>
 import { onMounted, computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { DateTime } from 'luxon';
 import getWeeksListUseCase from '../domain/usecases/get_weeks_list_usecase';
 import WeekSummaryTableRow from '@/components/organisms/WeekSummaryTableRow.vue';
 import WeekSummary from '@/components/organisms/WeekSummary.vue';
+
+const router = useRouter();
 
 const loading = ref(false);
 
@@ -52,6 +55,7 @@ const headers = [
 
 const datagriditems = computed(() => weeks.value.map((week) => {
   return {
+    weeklyMenuId: week.weeklyMenuId,
     weekStart: DateTime.fromSQL(week.weekStart).toFormat('DD'),
     cutoffDateTime: DateTime.fromSQL(week.cutoffDateTime).toFormat('t - ccc, L/d'),
     emailSent: week.emailSent,
@@ -74,7 +78,11 @@ const onClickEmailSend = (week) => {
 };
 
 const onClickFillReports = (week) => {
-  alert('fill reports');
+  console.log(week);
+  router.push({
+    path: `/week/${week.weeklyMenuId}/report`,
+    replace: true,
+  });
 };
 
 const onClickEdit = (week) => {
