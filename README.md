@@ -1,75 +1,38 @@
-# essentials
+# sv
 
-## Deploy to Firebase
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-1. `firebase deploy --only hosting`
+## Creating a project
 
-See: https://cli.vuejs.org/guide/deployment.html#firebase
+If you're seeing this, you've probably already done this step. Congrats!
 
-## Project setup
+```bash
+# create a new project in the current directory
+npx sv create
 
-```
-# yarn
-yarn
-
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# bun
-bun install
+# create a new project in my-app
+npx sv create my-app
 ```
 
-### Compiles and hot-reloads for development
+## Developing
 
-```
-# yarn
-yarn dev
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-# npm
+```bash
 npm run dev
 
-# pnpm
-pnpm dev
-
-# bun
-bun run dev
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
 
-### Compiles and minifies for production
+## Building
 
-```
-# yarn
-yarn build
+To create a production version of your app:
 
-# npm
+```bash
 npm run build
-
-# pnpm
-pnpm build
-
-# bun
-bun run build
 ```
 
-### Lints and fixes files
+You can preview the production build with `npm run preview`.
 
-```
-# yarn
-yarn lint
-
-# npm
-npm run lint
-
-# pnpm
-pnpm lint
-
-# bun
-bun run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://vitejs.dev/config/).
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
