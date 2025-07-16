@@ -1,0 +1,41 @@
+{
+  "name": "fmb-ui-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "naive-ui": "^2.42.0",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@playwright/test": "^1.54.1",
+    "@storybook/vue3-vite": "^9.0.17",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vitest/eslint-plugin": "^1.2.7",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "^9.29.0",
+    "eslint-plugin-storybook": "^9.0.17",
+    "eslint-plugin-vue": "~10.2.0",
+    "globals": "^16.2.0",
+    "jsdom": "^26.1.0",
+    "prettier": "3.5.3",
+    "storybook": "^9.0.17",
+    "vite": "^7.0.0",
+    "vite-plugin-vue-devtools": "^7.7.7",
+    "vitest": "^3.2.4"
+  }
+}
