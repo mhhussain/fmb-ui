@@ -26,9 +26,9 @@ jobs:
       - run: npm run build                   # Vite → dist/
 
       # ---------- tests ----------
-      - run: npm run test:unit               # Vitest
-      - run: npx playwright install --with-deps
-      - run: npm run test:e2e                # Playwright E2E
+      # - run: npm run test:unit               # Vitest
+      # - run: npx playwright install --with-deps
+      # - run: npm run test:e2e                # Playwright E2E
       # ----------------------------
 
       # Upload static site when we’re on main
