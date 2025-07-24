@@ -19,7 +19,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm                         # optional
+          cache: npm                
+          cache-dependency-path: ./fmb-ui-web/package-lock.json         # optional
 
       - run: npm ci
       - run: npm run build                   # Vite → dist/
