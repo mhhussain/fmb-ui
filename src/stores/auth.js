@@ -7,28 +7,8 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('authToken') || null)
   const isLoading = ref(false)
 
-  // Roles in order of permissions (Admin has highest, Member has lowest)
-  const roles = {
-    Admin: 6,
-    FMAdmin: 5,
-    MemAdmin: 4,
-    FillAdmin: 3,
-    MenuAdmin: 2,
-    Member: 1
-  }
-
   // Getters
   const isAuthenticated = computed(() => !!token.value && !!user.value)
-  const userRole = computed(() => user.value?.role || 'Member')
-  const userRoleLevel = computed(() => roles[userRole.value] || 1)
-  
-  // Check if user has permission for a specific role or higher
-  const hasPermission = computed(() => {
-    return (requiredRole) => {
-      const requiredLevel = roles[requiredRole] || 1
-      return userRoleLevel.value >= requiredLevel
-    }
-  })
 
   // Actions
   const login = async (itsId, password) => {
@@ -67,22 +47,18 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logout = () => {
     // Clear localStorage
-    localStorage.removeItem('authToken')
     localStorage.removeItem('userInfo')
     
     // Clear store
     user.value = null
-    token.value = null
   }
 
   const initializeAuth = () => {
-    const storedToken = localStorage.getItem('authToken')
     const storedUser = localStorage.getItem('userInfo')
     
-    if (storedToken && storedUser) {
+    if (storedUser) {
       try {
         user.value = JSON.parse(storedUser)
-        token.value = storedToken
       } catch (error) {
         console.error('Error parsing stored user data:', error)
         logout()
@@ -93,14 +69,10 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     // State
     user,
-    token,
     isLoading,
     
     // Getters
     isAuthenticated,
-    userRole,
-    userRoleLevel,
-    hasPermission,
     
     // Actions
     login,

@@ -3,7 +3,6 @@
     <div class="login-card">
       <div class="login-header">
         <h1>FMB Admin</h1>
-        <p>Administrative Dashboard</p>
       </div>
       
       <n-form
@@ -40,14 +39,14 @@
             @click="handleLogin"
             block
           >
-            {{ isLoading ? 'Signing in...' : 'Sign In' }}
+            {{ isLoading ? 'Logging in...' : 'Log In' }}
           </n-button>
         </n-form-item>
       </n-form>
       
       <div class="login-footer">
         <p class="text-muted">
-          Use your ITS ID and the admin password to access the system.
+          Temporary login screen for testing purposes.
         </p>
       </div>
     </div>
@@ -105,7 +104,7 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fa8824 0%, #7649f1 100%);
   padding: 20px;
 }
 
@@ -115,7 +114,7 @@ const handleLogin = async () => {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
 }
 
 .login-header {

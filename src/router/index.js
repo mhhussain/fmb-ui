@@ -164,19 +164,13 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   
   // Initialize auth on first load
-  if (!authStore.isAuthenticated && localStorage.getItem('authToken')) {
+  if (!authStore.isAuthenticated) {
     authStore.initializeAuth()
   }
   
   // Check if route requires authentication
   if (to.meta.requiresAuth !== false && !authStore.isAuthenticated) {
     next('/login')
-    return
-  }
-  
-  // Check role-based access
-  if (to.meta.requiresRole && !authStore.hasPermission(to.meta.requiresRole)) {
-    next('/')
     return
   }
   
