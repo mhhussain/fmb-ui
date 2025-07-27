@@ -68,7 +68,6 @@
         <n-card title="Quick Actions" class="action-card">
           <div class="action-buttons">
             <n-button
-              v-if="hasPermission('MemAdmin')"
               type="primary"
               @click="router.push('/members')"
               block
@@ -77,7 +76,6 @@
             </n-button>
             
             <n-button
-              v-if="hasPermission('MemAdmin')"
               type="info"
               @click="router.push('/households')"
               block
@@ -86,7 +84,6 @@
             </n-button>
             
             <n-button
-              v-if="hasPermission('MenuAdmin')"
               type="success"
               @click="router.push('/menus')"
               block
@@ -95,7 +92,6 @@
             </n-button>
             
             <n-button
-              v-if="hasPermission('FillAdmin')"
               type="warning"
               @click="router.push('/fill-reports')"
               block
@@ -158,8 +154,6 @@ const stats = ref({
 })
 
 const recentActivity = ref([])
-
-const hasPermission = computed(() => authStore.hasPermission)
 
 onMounted(async () => {
   // TODO: Load actual stats from API

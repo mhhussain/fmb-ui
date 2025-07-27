@@ -110,68 +110,47 @@ const menuOptions = computed(() => {
     }
   ]
 
-  // Member Management - requires MemAdmin or higher
-  if (authStore.hasPermission('MemAdmin')) {
-    options.push({
-      label: 'Members',
-      key: '/members',
-      icon: renderIcon(PeopleOutline)
-    })
-  }
+  options.push({
+    label: 'Members',
+    key: '/members',
+    icon: renderIcon(PeopleOutline)
+  })
 
-  // Household Management - requires MemAdmin or higher
-  if (authStore.hasPermission('MemAdmin')) {
-    options.push({
-      label: 'Households',
-      key: '/households',
-      icon: renderIcon(HomeOutline)
-    })
-  }
+  options.push({
+    label: 'Households',
+    key: '/households',
+    icon: renderIcon(HomeOutline)
+  })
 
-  // Menu Management - requires MenuAdmin or higher
-  if (authStore.hasPermission('MenuAdmin')) {
-    options.push({
-      label: 'Menus',
-      key: '/menus',
-      icon: renderIcon(RestaurantOutline)
-    })
-  }
+  options.push({
+    label: 'Menus',
+    key: '/menus',
+    icon: renderIcon(RestaurantOutline)
+  })
 
-  // Filling Management - requires FillAdmin or higher
-  if (authStore.hasPermission('FillAdmin')) {
-    options.push({
-      label: 'Fill Reports',
-      key: '/fill-reports',
-      icon: renderIcon(CalendarOutline)
-    })
-  }
+  options.push({
+    label: 'Fill Reports',
+    key: '/fill-reports',
+    icon: renderIcon(CalendarOutline)
+  })
 
-  // Vendor Management - requires MenuAdmin or higher
-  if (authStore.hasPermission('MenuAdmin')) {
-    options.push({
-      label: 'Vendors',
-      key: '/vendors',
-      icon: renderIcon(RestaurantOutline)
-    })
-  }
+  options.push({
+    label: 'Vendors',
+    key: '/vendors',
+    icon: renderIcon(RestaurantOutline)
+  })
 
-  // Analytics - requires Admin or higher
-  if (authStore.hasPermission('Admin')) {
-    options.push({
-      label: 'Analytics',
-      key: '/analytics',
-      icon: renderIcon(BarChartOutline)
-    })
-  }
+  options.push({
+    label: 'Analytics',
+    key: '/analytics',
+    icon: renderIcon(BarChartOutline)
+  })
 
-  // Settings - requires Admin or higher
-  if (authStore.hasPermission('Admin')) {
-    options.push({
-      label: 'Settings',
-      key: '/settings',
-      icon: renderIcon(SettingsOutline)
-    })
-  }
+  options.push({
+    label: 'Settings',
+    key: '/settings',
+    icon: renderIcon(SettingsOutline)
+  })
 
   return options
 })
