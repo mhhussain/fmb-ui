@@ -16,11 +16,6 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: '',
-        name: 'Dashboard',
-        component: () => import('@/views/Dashboard.vue')
-      },
-      {
         path: 'week/:startDate',
         name: 'Week',
         component: () => import('@/views/Week.vue'),

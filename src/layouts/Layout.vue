@@ -10,7 +10,7 @@
           </div>
 
           <div class="header-center">
-            <n-button quaternary>
+            <n-button v-on:click="nav()" quaternary>
               Menus
             </n-button>
             <n-button quaternary>
@@ -177,6 +177,10 @@ const handleUserMenuSelect = (key) => {
 
 const renderIcon = (icon) => {
   return () => h(icon)
+}
+
+const nav = () => {
+  router.push('/week/20250804')
 }
 </script>
 
