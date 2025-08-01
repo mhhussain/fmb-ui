@@ -13,9 +13,7 @@
             <n-space class="menu-container" vertical>
                 <h3 style="font-weight: bold;">Menu</h3>
                 <n-divider></n-divider>
-                <MenuListItem name="Daal Gosht" />
-                <n-divider></n-divider>
-                <MenuListItem name="Roti" />
+                <MenuListItem v-for="item in menuData.menu" :key="item.dailyMenuItemId" :name="item.description" />
                 <n-divider></n-divider>
                 <n-button class="add-menu-item-button" type="info" dashed>
                     Add Menu Item
@@ -25,6 +23,7 @@
             
             <n-space class="daily-preferences-container" vertical>
                 <h3 style="font-weight: bold;">Daily Preferences</h3>
+                <n-alert v-if="!pastCutoffOrDate" type="warning">Thaali cutoff has not been reached for this day, menu preferences are not final.</n-alert>
                 <n-space horizontal>
                     <n-text>Group by:</n-text>
                     <n-button info ghost round>None</n-button>
@@ -32,14 +31,17 @@
                     <n-button info ghost round>Zone</n-button>
                     <n-button info ghost round>Status</n-button>
                 </n-space>
-                <n-data-table :columns="dailyPreferencesColumns" :data="dailyPreferencesData" :row-class-name="rowClass" />
+                <n-data-table :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
+                
+                <h3 style="font-weight: bold;">Opted Out</h3>
+                <n-data-table :columns="dailyPreferencesColumns" :data="optedOutDailyPreferences" :pagination="optedOutDailyPreferencesPagination" />
             </n-space>
         </n-space>
     </div>
 </template>
 
 <script setup>
-import { h } from 'vue'
+import { h, ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { DateTime } from 'luxon'
 import { Calendar } from '@vicons/ionicons5'
@@ -74,7 +76,7 @@ switch (day) {
 
 const dailyPreferencesColumns = [
     {
-        key: 'no',
+        key: 'thaaliContainerNumber',
         title: 'No.',
         width: 30
     },
@@ -85,7 +87,7 @@ const dailyPreferencesColumns = [
         width: 30
     },
     {
-        key: 'zone',
+        key: 'zoneName',
         title: 'Zone',
         width: 50,
         ellipsis: {
@@ -93,7 +95,7 @@ const dailyPreferencesColumns = [
         }
     },
     {
-        key: 'household',
+        key: 'thaaliContactName',
         title: 'Household',
         width: 100,
         ellipsis: {
@@ -129,86 +131,68 @@ const rowClass = (row) => {
     if (row.status === 'Missing') {
         classes.push('missing-thaali');
     }
-    if (row.default) {
+
+    // This will set the Size column to italic if the household has not updated their preference
+    // Once automation is setup to generate fills for each day, all rows will be updated.
+    // Once automation is run, no more rows should be italicized. This should be an indication
+    // that cutoff and automation is complete and counts have been finalized.
+    if (!row.updated) {
         classes.push('default-preference');
     }
     return classes;
 }
 
-const dailyPreferencesData = [
-    {
-        no: 57,
-        size: 'B',
-        default: true,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Missing',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-    {
-        no: 97,
-        size: 'C',
-        default: true,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Missing',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-    {
-        no: 57,
-        size: 'B',
-        default: false,
-        zone: 'F. Hills Zone 4',
-        household: 'Shk. Mustafa Hussain',
-        status: 'Checked in',
-    },
-]
+const dailyPreferencesPagination = ref({
+    pageSize: 10,
+});
+
+const optedOutDailyPreferencesPagination = ref({
+    pageSize: 10,
+});
+
+const menuData = ref({
+    weekId: 0,
+    weekStart: '',
+    cutoffDateAndTime: '',
+    fillScheduleId: 0,
+    thaaliCoordinatorId: 0,
+    thaaliCoordinatorName: '',
+    menuId: 0,
+    menuDate: '',
+    menu: [],
+    dailyPreferences: [],
+});
+
+const dailyPreferences = computed(() => {
+    return menuData.value.dailyPreferences.filter(item => item.isOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+});
+
+const optedOutDailyPreferences = computed(() => {
+    return menuData.value.dailyPreferences.filter(item => !item.isOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+});
+
+const pastCutoffOrDate = computed(() => {
+    const menuDate = DateTime.fromISO(menuData.value.menuDate);
+    const cutoff = DateTime.fromISO(menuData.value.cutoffDateAndTime);
+    const now = DateTime.now();
+    return cutoff < now.minus({ hours: 5 }) || menuDate < now.minus({ hours: 5 });
+});
+
+onMounted(async () => {
+    const response = await fetch(`https://us-central1-xyz-moohh-fmbmobile-test.cloudfunctions.net/app/api/v2/admin/week/${route.params.startDate}/${day}`);
+    const data = await response.json();
+    menuData.value.weekId = data.weekId;
+    menuData.value.weekStart = data.weekStart;
+    menuData.value.cutoffDateAndTime = data.cutoffDateAndTime;
+    menuData.value.fillScheduleId = data.fillScheduleId;
+    menuData.value.thaaliCoordinatorId = data.thaaliCoordinatorId;
+    menuData.value.thaaliCoordinatorName = data.thaaliCoordinatorName;
+    menuData.value.menuId = data.menuId;
+    menuData.value.menuDate = data.menuDate;
+    menuData.value.menu = data.menu;
+    menuData.value.dailyPreferences = data.dailyPreferences;
+});
+
 
 </script>
 

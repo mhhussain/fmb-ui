@@ -76,65 +76,8 @@ const route = useRoute()
 const message = useMessage()
 const authStore = useAuthStore()
 
-const collapsed = ref(false)
 const user = computed(() => authStore.user)
 
-// Menu options based on user permissions
-const menuOptions = computed(() => {
-  const options = [
-    {
-      label: 'Dashboard',
-      key: '/',
-      icon: renderIcon(HomeOutline)
-    }
-  ]
-
-  options.push({
-    label: 'Members',
-    key: '/members',
-    icon: renderIcon(PeopleOutline)
-  })
-
-  options.push({
-    label: 'Households',
-    key: '/households',
-    icon: renderIcon(HomeOutline)
-  })
-
-  options.push({
-    label: 'Menus',
-    key: '/menus',
-    icon: renderIcon(RestaurantOutline)
-  })
-
-  options.push({
-    label: 'Fill Reports',
-    key: '/fill-reports',
-    icon: renderIcon(CalendarOutline)
-  })
-
-  options.push({
-    label: 'Vendors',
-    key: '/vendors',
-    icon: renderIcon(RestaurantOutline)
-  })
-
-  options.push({
-    label: 'Analytics',
-    key: '/analytics',
-    icon: renderIcon(BarChartOutline)
-  })
-
-  options.push({
-    label: 'Settings',
-    key: '/settings',
-    icon: renderIcon(SettingsOutline)
-  })
-
-  return options
-})
-
-const activeKey = computed(() => route.path)
 
 const breadcrumbs = computed(() => {
   const pathSegments = route.path.split('/').filter(Boolean);
@@ -160,10 +103,6 @@ const userMenuOptions = [
   }
 ]
 
-const handleMenuUpdate = (key) => {
-  router.push(key)
-}
-
 const handleUserMenuSelect = (key) => {
   if (key === 'logout') {
     authStore.logout()
@@ -175,18 +114,12 @@ const handleUserMenuSelect = (key) => {
   }
 }
 
-const renderIcon = (icon) => {
-  return () => h(icon)
-}
-
 const nav = () => {
   router.push('/week/20250804')
 }
 </script>
 
 <style scoped>
-
-
 .header-content {
   display: flex;
   align-items: center;

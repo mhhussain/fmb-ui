@@ -19,7 +19,7 @@
             </n-space>
             
             <n-space class="sidebar-container">
-                <n-card bordered="true" title="Stats">
+                <n-card title="Stats">
                     <n-space>
                         <n-space>
                             <n-text>Total Thaalis</n-text>
