@@ -3,7 +3,7 @@ name: CI / CD (Vue)
 
 on:
   push:
-    branches: [main]          # production deploys
+    branches: [develop]          # production deploys
   pull_request:
   workflow_dispatch:
 
