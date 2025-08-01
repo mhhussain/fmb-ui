@@ -159,10 +159,18 @@ const routes = [
   }
 ]
 
-const router = createRouter({
-  history: createWebHistory('/fmb-ui'),
-  routes
-})
+let router;
+if (process.env.NODE_ENV === 'production') {
+  router = createRouter({
+    history: createWebHistory(),
+    routes
+  })
+} else {
+  router = createRouter({
+    history: createWebHistory('/fmb-ui'),
+    routes
+  })
+}
 
 // Navigation guard for authentication
 router.beforeEach((to, from, next) => {
