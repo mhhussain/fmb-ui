@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import AdminLayout from '@/layouts/AdminLayout.vue'
+import Layout from '@/layouts/Layout.vue'
 import Login from '@/views/Login.vue'
 
 const routes = [
@@ -12,13 +12,23 @@ const routes = [
   },
   {
     path: '/',
-    component: AdminLayout,
+    component: Layout,
     meta: { requiresAuth: true },
     children: [
       {
         path: '',
         name: 'Dashboard',
         component: () => import('@/views/Dashboard.vue')
+      },
+      {
+        path: 'week/:startDate',
+        name: 'Week',
+        component: () => import('@/views/Week.vue'),
+      },
+      {
+        path: 'week/:startDate/:day',
+        name: 'Day',
+        component: () => import('@/views/Day.vue'),
       },
       // {
       //   path: 'members',

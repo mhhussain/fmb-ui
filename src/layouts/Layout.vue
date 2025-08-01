@@ -1,52 +1,24 @@
 <template>
   <n-layout has-sider>
-    <!-- Sidebar -->
-    <n-layout-sider
-      bordered
-      collapse-mode="width"
-      :collapsed-width="64"
-      :width="240"
-      :collapsed="collapsed"
-      show-trigger
-      @collapse="collapsed = true"
-      @expand="collapsed = false"
-    >
-      <div class="sidebar-header">
-        <h2 v-if="!collapsed">FMB Admin</h2>
-        <h2 v-else>FMB</h2>
-      </div>
-      
-      <n-menu
-        :collapsed="collapsed"
-        :collapsed-width="64"
-        :collapsed-icon-size="22"
-        :options="menuOptions"
-        :value="activeKey"
-        @update:value="handleMenuUpdate"
-      />
-    </n-layout-sider>
-
     <!-- Main Content -->
     <n-layout>
       <!-- Header -->
       <n-layout-header bordered>
         <div class="header-content">
           <div class="header-left">
-            <n-button
-              quaternary
-              circle
-              @click="collapsed = !collapsed"
-            >
-              <template #icon>
-                <n-icon><MenuOutline /></n-icon>
-              </template>
+            <h1>FMB Admin</h1>
+          </div>
+
+          <div class="header-center">
+            <n-button quaternary>
+              Menus
             </n-button>
-            
-            <n-breadcrumb>
-              <n-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
-                {{ item.label }}
-              </n-breadcrumb-item>
-            </n-breadcrumb>
+            <n-button quaternary>
+              Households
+            </n-button>
+            <n-button quaternary>
+              Vendors
+            </n-button>
           </div>
           
           <div class="header-right">
@@ -67,6 +39,13 @@
 
       <!-- Page Content -->
       <n-layout-content>
+        <div class="breadcrumb-container">
+          <n-breadcrumb>
+            <n-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
+              {{ item.label }}
+            </n-breadcrumb-item>
+          </n-breadcrumb>
+        </div>
         <div class="page-content">
           <router-view />
         </div>
@@ -158,13 +137,13 @@ const menuOptions = computed(() => {
 const activeKey = computed(() => route.path)
 
 const breadcrumbs = computed(() => {
-  const pathSegments = route.path.split('/').filter(Boolean)
-  const breadcrumbs = [{ label: 'Dashboard', path: '/' }]
+  const pathSegments = route.path.split('/').filter(Boolean);
+  const breadcrumbs = [];
   
   pathSegments.forEach((segment, index) => {
-    const path = '/' + pathSegments.slice(0, index + 1).join('/')
-    const label = segment.charAt(0).toUpperCase() + segment.slice(1).replace('-', ' ')
-    breadcrumbs.push({ label, path })
+    const path = '/' + pathSegments.slice(0, index + 1).join('/');
+    const label = segment.charAt(0).toUpperCase() + segment.slice(1).replace('-', ' ');
+    breadcrumbs.push({ label, path });
   })
   
   return breadcrumbs
@@ -202,40 +181,23 @@ const renderIcon = (icon) => {
 </script>
 
 <style scoped>
-.sidebar-header {
-  padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  text-align: center;
-}
 
-.sidebar-header h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-}
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 15vw 0 12vw;
   height: 64px;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
+.breadcrumb-container {
+  padding: 16px 12vw 0 12vw;
+  background: #f5f5f5;
 }
 
 .page-content {
-  padding: 24px;
+  padding: 24px 12vw 0 12vw;
   min-height: calc(100vh - 64px);
   background: #f5f5f5;
 }
