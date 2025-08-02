@@ -181,7 +181,6 @@ const pastCutoffOrDate = computed(() => {
 });
 
 onMounted(async () => {
-    // const response = await fetch(`https://us-central1-xyz-moohh-fmbmobile-test.cloudfunctions.net/app/api/v2/admin/week/${route.params.startDate}/${day}`);
     const response = await fetch(`${apiUrl}/api/v2/admin/week/${route.params.startDate}/${day}`);
     const data = await response.json();
     menuData.value.weekId = data.weekId;
