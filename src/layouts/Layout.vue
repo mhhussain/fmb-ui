@@ -115,7 +115,7 @@ const handleUserMenuSelect = (key) => {
 }
 
 const nav = () => {
-  router.push('/week/20250804')
+  router.push('/')
 }
 </script>
 

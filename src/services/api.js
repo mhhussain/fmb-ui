@@ -66,9 +66,6 @@ export const endpoints = {
   fillReport: (date) => `/api/v2/admin/fills/${date}`,
   inventory: (date, householdId) => `/api/v2/admin/fills/${date}/household/${householdId}/inventory`,
   
-  // Messaging
-  sendTopicNotification: '/api/v1/admin/messaging/send/topic',
-  sendTokenNotification: '/api/v1/admin/messaging/send/token',
 }
 
 export default api 
