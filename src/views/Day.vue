@@ -22,7 +22,7 @@
             </n-space>
             
             <n-space class="daily-preferences-container" vertical>
-                <h3 style="font-weight: bold;">Daily Preferences</h3>
+                <h3 style="font-weight: bold;">Daily Preferences ({{ dailyPreferences.length }})</h3>
                 <n-alert v-if="!pastCutoffOrDate" type="warning">Thaali cutoff has not been reached for this day, menu preferences are not final.</n-alert>
                 <n-space horizontal>
                     <n-text>Group by:</n-text>
@@ -33,8 +33,23 @@
                 </n-space>
                 <n-data-table :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
                 
-                <h3 style="font-weight: bold;">Opted Out</h3>
+                <h3 style="font-weight: bold;">Opted Out ({{ optedOutDailyPreferences.length }})</h3>
                 <n-data-table :columns="dailyPreferencesColumns" :data="optedOutDailyPreferences" :pagination="optedOutDailyPreferencesPagination" />
+
+                <n-space horizontal>
+                    <h3 style="font-weight: bold;">Defaulted Out ({{ defaultedOutDailyPreferences.length }})</h3>
+                    <n-switch v-model:value="defaultedOutDailyPreferencesShow">
+                        <template #checked>
+                            show
+                        </template>
+                        <template #unchecked>
+                            hide
+                        </template>
+                    </n-switch>
+                </n-space>
+                <n-collapse-transition :show="defaultedOutDailyPreferencesShow">
+                    <n-data-table :columns="dailyPreferencesColumns" :data="defaultedOutDailyPreferences" :pagination="defaultedOutDailyPreferencesPagination" />
+                </n-collapse-transition>
             </n-space>
         </n-space>
     </div>
@@ -152,6 +167,12 @@ const optedOutDailyPreferencesPagination = ref({
     pageSize: 10,
 });
 
+const defaultedOutDailyPreferencesPagination = ref({
+    pageSize: 10,
+});
+
+const defaultedOutDailyPreferencesShow = ref(false);
+
 const menuData = ref({
     weekId: 0,
     weekStart: '',
@@ -166,11 +187,15 @@ const menuData = ref({
 });
 
 const dailyPreferences = computed(() => {
-    return menuData.value.dailyPreferences.filter(item => item.isOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+    return menuData.value.dailyPreferences.filter(item => item.isOptedIn && item.defaultIsOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
 });
 
 const optedOutDailyPreferences = computed(() => {
-    return menuData.value.dailyPreferences.filter(item => !item.isOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+    return menuData.value.dailyPreferences.filter(item => !item.isOptedIn && item.defaultIsOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+});
+
+const defaultedOutDailyPreferences = computed(() => {
+    return menuData.value.dailyPreferences.filter(item => !item.defaultIsOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
 });
 
 const pastCutoffOrDate = computed(() => {
