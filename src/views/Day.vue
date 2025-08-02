@@ -47,6 +47,8 @@ import { DateTime } from 'luxon'
 import { Calendar } from '@vicons/ionicons5'
 import { NButton } from 'naive-ui'
 
+import { apiUrl } from '@/utils/helpers'
+
 import MenuListItem from '@/components/atoms/MenuListItem.vue'
 
 const route = useRoute();
@@ -172,14 +174,14 @@ const optedOutDailyPreferences = computed(() => {
 });
 
 const pastCutoffOrDate = computed(() => {
-    const menuDate = DateTime.fromISO(menuData.value.menuDate);
-    const cutoff = DateTime.fromISO(menuData.value.cutoffDateAndTime);
-    const now = DateTime.now();
+    const menuDate = DateTime.fromISO(menuData.value.menuDate).setZone('America/New_York');
+    const cutoff = DateTime.fromISO(menuData.value.cutoffDateAndTime).setZone('America/New_York');
+    const now = DateTime.now().setZone('America/New_York');
     return cutoff < now.minus({ hours: 5 }) || menuDate < now.minus({ hours: 5 });
 });
 
 onMounted(async () => {
-    const response = await fetch(`https://us-central1-xyz-moohh-fmbmobile-test.cloudfunctions.net/app/api/v2/admin/week/${route.params.startDate}/${day}`);
+    const response = await fetch(`${apiUrl}/api/v2/admin/week/${route.params.startDate}/${day}`);
     const data = await response.json();
     menuData.value.weekId = data.weekId;
     menuData.value.weekStart = data.weekStart;
