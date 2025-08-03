@@ -243,7 +243,6 @@ const statusOptions = [
 ];
 
 const onOpenPreferenceModal = (row) => {
-    console.log(row);
     showPreferenceModal.value.show = true;
     showPreferenceModal.value.loading = false;
     showPreferenceModal.value.weeklyMenuId = menuData.value.weekId;
@@ -333,8 +332,6 @@ const onUpdatePreference = async () => {
         changeuseritsid: 'test-admin-site',
     }
 
-    console.log(inputBody);
-
     const response = await fetch(`${apiUrl}/api/v2/admin/preference`, {
         method: 'POST',
         body: JSON.stringify(inputBody),
@@ -343,7 +340,6 @@ const onUpdatePreference = async () => {
         },
     });
     const data = await response.json();
-    console.log(data);
     if (response.status === 200) {
         message.success('Preference updated successfully');
         await getMenuData();
