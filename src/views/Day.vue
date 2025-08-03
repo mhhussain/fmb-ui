@@ -57,6 +57,10 @@
             <n-card :title="`${day} Preference Update`">
                 <n-space vertical>
                     <n-space horizontal>
+                        <n-text>Household Preference ID:</n-text>
+                        <n-text>{{ showPreferenceModal.householdFillMenuPreferenceId }}</n-text>
+                    </n-space>
+                    <n-space horizontal>
                         <n-text>Household:</n-text>
                         <n-text>{{ showPreferenceModal.headOfHouseholdName }}</n-text>
                     </n-space>
@@ -98,7 +102,7 @@
                         <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" />
                     </n-space>
                     <n-space horizontal>
-                        <n-button type="primary">Update</n-button>
+                        <n-button v-bind:disabled="showPreferenceModal.loading" type="primary" @click="onUpdatePreference">Update</n-button>
                     </n-space>
                 </n-space>
             </n-card>
@@ -111,7 +115,7 @@ import { h, ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { DateTime } from 'luxon'
 import { Calendar } from '@vicons/ionicons5'
-import { NButton } from 'naive-ui'
+import { NButton, useMessage } from 'naive-ui'
 
 import { apiUrl } from '@/utils/helpers'
 
@@ -121,6 +125,7 @@ const route = useRoute();
 const day = route.params.day.charAt(0).toUpperCase() + route.params.day.slice(1);
 let date;
 
+const message = useMessage();
 
 // DAILY PREFERENCES TABLE CONFIGURATION
 switch (day) {
@@ -238,7 +243,9 @@ const statusOptions = [
 ];
 
 const onOpenPreferenceModal = (row) => {
+    console.log(row);
     showPreferenceModal.value.show = true;
+    showPreferenceModal.value.loading = false;
     showPreferenceModal.value.weeklyMenuId = menuData.value.weekId;
     showPreferenceModal.value.fillScheduleId = menuData.value.fillScheduleId;
     showPreferenceModal.value.dailyMenuId = menuData.value.menuId;
@@ -248,7 +255,7 @@ const onOpenPreferenceModal = (row) => {
     showPreferenceModal.value.thaaliContactName = row.thaaliContactName;
     showPreferenceModal.value.thaaliContactPhone = row.thaaliContactPhone;
     showPreferenceModal.value.thaaliContactVerified = row.thaaliContactVerified;
-    showPreferenceModal.value.householdPreferenceId = row.householdPreferenceId;
+    showPreferenceModal.value.householdFillMenuPreferenceId = row.householdFillMenuPreferenceId;
     showPreferenceModal.value.isOptedIn = row.isOptedIn;
     showPreferenceModal.value.thaaliSize = row.size;
     showPreferenceModal.value.mehmanThaali = row.householdFillMenuPreferenceId != 0 ? menuData.value.dailyPreferences.find(item => item.householdFillMenuPreferenceId === row.householdFillMenuPreferenceId && item.mehmanThaali)?.mehmanThaali ? true : false : false;
@@ -260,6 +267,7 @@ const onOpenPreferenceModal = (row) => {
 
 const onClosePreferenceModal = () => {
     showPreferenceModal.value.show = false;
+    showPreferenceModal.value.loading = false;
     showPreferenceModal.value.weeklyMenuId = 0;
     showPreferenceModal.value.fillScheduleId = 0;
     showPreferenceModal.value.dailyMenuId = 0;
@@ -269,7 +277,7 @@ const onClosePreferenceModal = () => {
     showPreferenceModal.value.thaaliContactName = '';
     showPreferenceModal.value.thaaliContactPhone = '';
     showPreferenceModal.value.thaaliContactVerified = false;
-    showPreferenceModal.value.householdPreferenceId = 0;
+    showPreferenceModal.value.householdFillMenuPreferenceId = 0;
     showPreferenceModal.value.isOptedIn = false;
     showPreferenceModal.value.thaaliSize = 'X';
     showPreferenceModal.value.mehmanThaali = false;
@@ -280,8 +288,10 @@ const onClosePreferenceModal = () => {
 
 const onThaaliSizeChange = (size) => {
     showPreferenceModal.value.thaaliSize = size;
+    showPreferenceModal.value.isOptedIn = true;
 
     if (size.includes('X')) {
+        showPreferenceModal.value.isOptedIn = false;
         showPreferenceModal.value.mehmanThaali = false;
         showPreferenceModal.value.mehmanThaaliSize = 'X';
     }
@@ -306,6 +316,43 @@ const onMehmanThaaliSizeChange = (size) => {
     }
 }
 
+const onUpdatePreference = async () => {
+    showPreferenceModal.value.loading = true;
+    const inputBody = {
+        weeklyMenuId: showPreferenceModal.value.weeklyMenuId,
+        fillScheduleId: showPreferenceModal.value.fillScheduleId,
+        dailyMenuId: showPreferenceModal.value.dailyMenuId,
+        fmbProfileId: showPreferenceModal.value.fmbProfileId,
+        householdPreferenceId: showPreferenceModal.value.householdFillMenuPreferenceId,
+        isOptedIn: showPreferenceModal.value.isOptedIn,
+        thaaliSize: showPreferenceModal.value.thaaliSize,
+        mehmanThaali: showPreferenceModal.value.mehmanThaali,
+        mehmanThaaliSize: showPreferenceModal.value.mehmanThaaliSize,
+        notes: showPreferenceModal.value.notes,
+        status: showPreferenceModal.value.status,
+        changeuseritsid: 'test-admin-site',
+    }
+
+    console.log(inputBody);
+
+    const response = await fetch(`${apiUrl}/api/v2/admin/preference`, {
+        method: 'POST',
+        body: JSON.stringify(inputBody),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 200) {
+        message.success('Preference updated successfully');
+        await getMenuData();
+    } else {
+        message.error(`Failed to update preference: ${data.message}`);
+    }
+    showPreferenceModal.value.loading = false;
+}
+
 // DATA REFERENCES
 
 const dailyPreferencesPagination = ref({
@@ -324,6 +371,7 @@ const defaultedOutDailyPreferencesShow = ref(false);
 
 const showPreferenceModal = ref({
     show: false,
+    loading: false,
     weeklyMenuId: 0,
     fillScheduleId: 0,
     dailyMenuId: 0,
@@ -333,7 +381,7 @@ const showPreferenceModal = ref({
     thaaliContactName: '',
     thaaliContactPhone: '',
     thaaliContactVerified: false,
-    householdPreferenceId: 0,
+    householdFillMenuPreferenceId: 0,
     isOptedIn: false,   
     thaaliSize: 'X',
     mehmanThaali: false,
@@ -374,7 +422,9 @@ const pastCutoffOrDate = computed(() => {
     return cutoff < now.minus({ hours: 5 }) || menuDate < now.minus({ hours: 5 });
 });
 
-onMounted(async () => {
+// API CALLS
+
+const getMenuData = async () => {
     const response = await fetch(`${apiUrl}/api/v2/admin/week/${route.params.startDate}/${day}`);
     const data = await response.json();
     menuData.value.weekId = data.weekId;
@@ -387,8 +437,11 @@ onMounted(async () => {
     menuData.value.menuDate = data.menuDate;
     menuData.value.menu = data.menu;
     menuData.value.dailyPreferences = data.dailyPreferences;
-});
+}
 
+onMounted(async () => {
+    await getMenuData();
+});
 
 </script>
 
