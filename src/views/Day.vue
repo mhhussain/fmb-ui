@@ -52,6 +52,61 @@
                 </n-collapse-transition>
             </n-space>
         </n-space>
+
+        <n-modal v-model:show="showPreferenceModal.show" :on-after-leave="onClosePreferenceModal" class="preference-modal">
+            <n-card :title="`${day} Preference Update`">
+                <n-space vertical>
+                    <n-space horizontal>
+                        <n-text>Household Preference ID:</n-text>
+                        <n-text>{{ showPreferenceModal.householdFillMenuPreferenceId }}</n-text>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Household:</n-text>
+                        <n-text>{{ showPreferenceModal.headOfHouseholdName }}</n-text>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Zone:</n-text>
+                        <n-text>{{ showPreferenceModal.zoneName }}</n-text>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Phone:</n-text>
+                        <n-text>{{ showPreferenceModal.thaaliContactPhone }} ({{ showPreferenceModal.thaaliContactName }})</n-text>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Size:</n-text>
+                        <n-radio :checked="showPreferenceModal.thaaliSize === 'X'" @click="onThaaliSizeChange('X')">X</n-radio>
+                        <n-radio :checked="showPreferenceModal.thaaliSize === 'A'" @click="onThaaliSizeChange('A')">A</n-radio>
+                        <n-radio :checked="showPreferenceModal.thaaliSize === 'B'" @click="onThaaliSizeChange('B')">B</n-radio>
+                        <n-radio :checked="showPreferenceModal.thaaliSize === 'C'" @click="onThaaliSizeChange('C')">C</n-radio>
+                        <n-radio :checked="showPreferenceModal.thaaliSize === 'D'" @click="onThaaliSizeChange('D')">D</n-radio>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Mehman Thaali:</n-text>
+                        <n-checkbox v-model:checked="showPreferenceModal.mehmanThaali" @click="onMehmanThaaliChange(showPreferenceModal.mehmanThaali)">
+                        </n-checkbox>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Mehman Thaali Size:</n-text>
+                        <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('X')" @click="onMehmanThaaliSizeChange('X')">X</n-radio>
+                        <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('A')" @click="onMehmanThaaliSizeChange('A')">A</n-radio>
+                        <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('B')" @click="onMehmanThaaliSizeChange('B')">B</n-radio>
+                        <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('C')" @click="onMehmanThaaliSizeChange('C')">C</n-radio>
+                        <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('D')" @click="onMehmanThaaliSizeChange('D')">D</n-radio>
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Notes:</n-text>
+                        <n-input v-model:value="showPreferenceModal.notes" />
+                    </n-space>
+                    <n-space horizontal>
+                        <n-text>Status:</n-text>
+                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" />
+                    </n-space>
+                    <n-space horizontal>
+                        <n-button v-bind:disabled="showPreferenceModal.loading" type="primary" @click="onUpdatePreference">Update</n-button>
+                    </n-space>
+                </n-space>
+            </n-card>
+        </n-modal>
     </div>
 </template>
 
@@ -60,7 +115,7 @@ import { h, ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { DateTime } from 'luxon'
 import { Calendar } from '@vicons/ionicons5'
-import { NButton } from 'naive-ui'
+import { NButton, useMessage } from 'naive-ui'
 
 import { apiUrl } from '@/utils/helpers'
 
@@ -70,6 +125,9 @@ const route = useRoute();
 const day = route.params.day.charAt(0).toUpperCase() + route.params.day.slice(1);
 let date;
 
+const message = useMessage();
+
+// DAILY PREFERENCES TABLE CONFIGURATION
 switch (day) {
     case 'Monday':
         date = DateTime.fromFormat(route.params.startDate, 'yyyyLLdd');
@@ -112,7 +170,7 @@ const dailyPreferencesColumns = [
         }
     },
     {
-        key: 'thaaliContactName',
+        key: 'headOfHouseholdName',
         title: 'Household',
         width: 100,
         ellipsis: {
@@ -130,11 +188,12 @@ const dailyPreferencesColumns = [
         title: '',
         width: 25,
         render: (row) => {
+            if (row.mehmanThaali) return null;
             return h(NButton, {
                 size: 'small',
                 text: true,
                 onClick: () => {
-                    console.log(row)
+                    onOpenPreferenceModal(row);
                 },
             }, {
                 default: () => 'Edit'
@@ -159,6 +218,143 @@ const rowClass = (row) => {
     return classes;
 }
 
+// MODAL CONFIGURATION
+const statusOptions = [
+    {
+        label: 'Unknown',
+        value: 'UNKNOWN'
+    },
+    {
+        label: 'Available',
+        value: 'AVAILABLE'
+    },
+    {
+        label: 'Missing',
+        value: 'MISSING'
+    },
+    {
+        label: 'Filled',
+        value: 'FILLED'
+    },
+    {
+        label: 'Picked Up',
+        value: 'PICKED_UP'
+    }
+];
+
+const onOpenPreferenceModal = (row) => {
+    console.log(row);
+    showPreferenceModal.value.show = true;
+    showPreferenceModal.value.loading = false;
+    showPreferenceModal.value.weeklyMenuId = menuData.value.weekId;
+    showPreferenceModal.value.fillScheduleId = menuData.value.fillScheduleId;
+    showPreferenceModal.value.dailyMenuId = menuData.value.menuId;
+    showPreferenceModal.value.fmbProfileId = row.fmbProfileId;
+    showPreferenceModal.value.headOfHouseholdName = row.headOfHouseholdName;
+    showPreferenceModal.value.zoneName = row.zoneName;
+    showPreferenceModal.value.thaaliContactName = row.thaaliContactName;
+    showPreferenceModal.value.thaaliContactPhone = row.thaaliContactPhone;
+    showPreferenceModal.value.thaaliContactVerified = row.thaaliContactVerified;
+    showPreferenceModal.value.householdFillMenuPreferenceId = row.householdFillMenuPreferenceId;
+    showPreferenceModal.value.isOptedIn = row.isOptedIn;
+    showPreferenceModal.value.thaaliSize = row.size;
+    showPreferenceModal.value.mehmanThaali = row.householdFillMenuPreferenceId != 0 ? menuData.value.dailyPreferences.find(item => item.householdFillMenuPreferenceId === row.householdFillMenuPreferenceId && item.mehmanThaali)?.mehmanThaali ? true : false : false;
+    showPreferenceModal.value.mehmanThaaliSize = row.householdFillMenuPreferenceId != 0 ? menuData.value.dailyPreferences.find(item => item.householdFillMenuPreferenceId === row.householdFillMenuPreferenceId && item.mehmanThaali)?.size ?? 'X' : 'X';
+    showPreferenceModal.value.notes = row.notes;
+    showPreferenceModal.value.status = row.status;
+    showPreferenceModal.value.changeuseritsid = 'admin';
+}
+
+const onClosePreferenceModal = () => {
+    showPreferenceModal.value.show = false;
+    showPreferenceModal.value.loading = false;
+    showPreferenceModal.value.weeklyMenuId = 0;
+    showPreferenceModal.value.fillScheduleId = 0;
+    showPreferenceModal.value.dailyMenuId = 0;
+    showPreferenceModal.value.fmbProfileId = 0;
+    showPreferenceModal.value.headOfHouseholdName = '';
+    showPreferenceModal.value.zoneName = '';
+    showPreferenceModal.value.thaaliContactName = '';
+    showPreferenceModal.value.thaaliContactPhone = '';
+    showPreferenceModal.value.thaaliContactVerified = false;
+    showPreferenceModal.value.householdFillMenuPreferenceId = 0;
+    showPreferenceModal.value.isOptedIn = false;
+    showPreferenceModal.value.thaaliSize = 'X';
+    showPreferenceModal.value.mehmanThaali = false;
+    showPreferenceModal.value.mehmanThaaliSize = 'X';
+    showPreferenceModal.value.notes = '';
+    showPreferenceModal.value.status = 'UNKNOWN';
+}
+
+const onThaaliSizeChange = (size) => {
+    showPreferenceModal.value.thaaliSize = size;
+    showPreferenceModal.value.isOptedIn = true;
+
+    if (size.includes('X')) {
+        showPreferenceModal.value.isOptedIn = false;
+        showPreferenceModal.value.mehmanThaali = false;
+        showPreferenceModal.value.mehmanThaaliSize = 'X';
+    }
+}
+
+const onMehmanThaaliChange = (mehmanThaali) => {
+    showPreferenceModal.value.mehmanThaali = mehmanThaali;
+    if (mehmanThaali === false) {
+        showPreferenceModal.value.mehmanThaaliSize = 'X';
+    }
+    if (mehmanThaali === true) {
+        showPreferenceModal.value.mehmanThaaliSize = showPreferenceModal.value.thaaliSize;
+    }
+}
+
+const onMehmanThaaliSizeChange = (size) => {
+    showPreferenceModal.value.mehmanThaaliSize = size;
+    if (size.includes('X')) {
+        showPreferenceModal.value.mehmanThaali = false;
+    } else {
+        showPreferenceModal.value.mehmanThaali = true;
+    }
+}
+
+const onUpdatePreference = async () => {
+    showPreferenceModal.value.loading = true;
+    const inputBody = {
+        weeklyMenuId: showPreferenceModal.value.weeklyMenuId,
+        fillScheduleId: showPreferenceModal.value.fillScheduleId,
+        dailyMenuId: showPreferenceModal.value.dailyMenuId,
+        fmbProfileId: showPreferenceModal.value.fmbProfileId,
+        householdPreferenceId: showPreferenceModal.value.householdFillMenuPreferenceId,
+        isOptedIn: showPreferenceModal.value.isOptedIn,
+        thaaliSize: showPreferenceModal.value.thaaliSize,
+        mehmanThaali: showPreferenceModal.value.mehmanThaali,
+        mehmanThaaliSize: showPreferenceModal.value.mehmanThaaliSize,
+        notes: showPreferenceModal.value.notes,
+        status: showPreferenceModal.value.status,
+        changeuseritsid: 'test-admin-site',
+    }
+
+    console.log(inputBody);
+
+    const response = await fetch(`${apiUrl}/api/v2/admin/preference`, {
+        method: 'POST',
+        body: JSON.stringify(inputBody),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 200) {
+        message.success('Preference updated successfully');
+        await getMenuData();
+    } else {
+        message.error(`Failed to update preference: ${data.message}`);
+    }
+    showPreferenceModal.value.loading = false;
+}
+
+// DATA REFERENCES
+
 const dailyPreferencesPagination = ref({
     pageSize: 10,
 });
@@ -172,6 +368,27 @@ const defaultedOutDailyPreferencesPagination = ref({
 });
 
 const defaultedOutDailyPreferencesShow = ref(false);
+
+const showPreferenceModal = ref({
+    show: false,
+    loading: false,
+    weeklyMenuId: 0,
+    fillScheduleId: 0,
+    dailyMenuId: 0,
+    fmbProfileId: 0,
+    headOfHouseholdName: '',
+    zoneName: '',
+    thaaliContactName: '',
+    thaaliContactPhone: '',
+    thaaliContactVerified: false,
+    householdFillMenuPreferenceId: 0,
+    isOptedIn: false,   
+    thaaliSize: 'X',
+    mehmanThaali: false,
+    mehmanThaaliSize: 'X',
+    notes: '',
+    status: 'UNKNOWN',
+});
 
 const menuData = ref({
     weekId: 0,
@@ -205,7 +422,9 @@ const pastCutoffOrDate = computed(() => {
     return cutoff < now.minus({ hours: 5 }) || menuDate < now.minus({ hours: 5 });
 });
 
-onMounted(async () => {
+// API CALLS
+
+const getMenuData = async () => {
     const response = await fetch(`${apiUrl}/api/v2/admin/week/${route.params.startDate}/${day}`);
     const data = await response.json();
     menuData.value.weekId = data.weekId;
@@ -218,8 +437,11 @@ onMounted(async () => {
     menuData.value.menuDate = data.menuDate;
     menuData.value.menu = data.menu;
     menuData.value.dailyPreferences = data.dailyPreferences;
-});
+}
 
+onMounted(async () => {
+    await getMenuData();
+});
 
 </script>
 
@@ -265,5 +487,9 @@ onMounted(async () => {
 :deep(.default-preference .size) {
     font-weight: normal;
     font-style: italic;
+}
+
+.preference-modal {
+    width: 50%;
 }
 </style>
