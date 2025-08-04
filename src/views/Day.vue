@@ -125,13 +125,13 @@
                         <h4 class="preference-modal-label" align-text="right">Notes:</h4>
                     </n-gi>
                     <n-gi :span="3">
-                        <n-text>{{ showPreferenceModal.notes }}</n-text>
+                        <n-input v-model:value="showPreferenceModal.notes" type="textarea" style="width: 100%;" />
                     </n-gi>
                     <n-gi :span="1">
                         <h4 class="preference-modal-label" align-text="right">Status:</h4>
                     </n-gi>
                     <n-gi :span="3">
-                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" style="width: 250px;" />
+                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" style="width: 100%" />
                     </n-gi>
                     <n-gi :span="1">
                         <n-button v-bind:disabled="showPreferenceModal.loading" type="primary" @click="onUpdatePreference">Update</n-button>
@@ -236,7 +236,7 @@ const dailyPreferencesColumns = [
     {
         key: 'headOfHouseholdName',
         title: 'Household',
-        width: 100,
+        width: 50,
         ellipsis: {
             tooltip: true
         },
@@ -249,18 +249,27 @@ const dailyPreferencesColumns = [
         }
     },
     {
-        key: 'status',
-        title: 'Status',
-        className: 'status',
-        width: 50,
-        sorter: (rowA, rowB) => {
-            const a = rowA.status ? rowA.status.toLowerCase() : '';
-            const b = rowB.status ? rowB.status.toLowerCase() : '';
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0;
+        key: 'notes',
+        title: 'Notes',
+        className: 'notes',
+        width: 100,
+        ellipsis: {
+            tooltip: true
         }
     },
+    // {
+    //     key: 'status',
+    //     title: 'Status',
+    //     className: 'status',
+    //     width: 50,
+    //     sorter: (rowA, rowB) => {
+    //         const a = rowA.status ? rowA.status.toLowerCase() : '';
+    //         const b = rowB.status ? rowB.status.toLowerCase() : '';
+    //         if (a < b) return -1;
+    //         if (a > b) return 1;
+    //         return 0;
+    //     }
+    // },
     {
         key: 'edit',
         title: '',
