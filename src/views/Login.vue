@@ -88,7 +88,7 @@ const handleLogin = async () => {
     await authStore.login(formData.itsId, formData.password)
     
     message.success('Login successful')
-    router.push('/week/20250804')
+    router.push('/')
   } catch (error) {
     console.error('Login error:', error)
     message.error(error.message || 'Login failed. Please check your credentials.')

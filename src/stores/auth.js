@@ -1,5 +1,8 @@
+import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { apiUrl } from '@/utils/helpers';
+
 
 export const useAuthStore = defineStore('auth', () => {
   // State
@@ -14,31 +17,29 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (itsId, password) => {
     isLoading.value = true
     try {
+      const response = await axios.get(`${apiUrl}/api/v2/mumineen/${itsId}`);
+
       // Placeholder authentication - replace with actual API call
-      if (itsId && password === 'admin123') {
-        // Mock user data - replace with actual API response
-        const mockUser = {
-          itsId,
-          name: 'Admin User',
-          role: 'Admin',
-          permissions: ['all']
-        }
+      if (response.data.ITSID) {
+
+        const userData = response.data;
         
-        const mockToken = 'mock-jwt-token-' + Date.now()
+        const newToken = 'jwt-token-' + Date.now();
         
         // Store in localStorage
-        localStorage.setItem('authToken', mockToken)
-        localStorage.setItem('userInfo', JSON.stringify(mockUser))
+        localStorage.setItem('authToken', newToken);
+        localStorage.setItem('userInfo', JSON.stringify(userData));
         
         // Update store
-        user.value = mockUser
-        token.value = mockToken
+        user.value = userData
+        token.value = newToken
         
-        return { success: true, user: mockUser }
+        return { success: true, user: userData }
       } else {
         throw new Error('Invalid credentials')
       }
     } catch (error) {
+      
       throw error
     } finally {
       isLoading.value = false

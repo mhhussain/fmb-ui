@@ -12,105 +12,10 @@
         <n-space class="day-container" vertical>
             <n-grid :x-gap="12" :y-gap="12" :cols="12">
                 <n-gi :span="6">
-                    <h3 style="font-weight: bold;">Menu</h3>
-                    <n-divider></n-divider>
-                    <MenuListItem v-for="item in menuData.menu" :key="item.dailyMenuItemId" :name="item.description" />
-                    <n-divider></n-divider>
-                    <n-button class="add-menu-item-button" type="info" dashed>
-                        Add Menu Item
-                    </n-button>
-                    <n-divider></n-divider>
+                    <MenuList :menu="menuData.menu" />
                 </n-gi>
                 <n-gi :span="6">
-                    <h3 style="font-weight: bold;">Count Summary</h3>
-                    <n-card>
-                        <n-grid :x-gap="12" :y-gap="12" :cols="8">
-                            <n-gi :span="1">
-                                X
-                            </n-gi>
-                            <n-gi :span="7">
-                                <n-progress
-                                    :percentage="optedOutDailyPreferences.length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
-                                    color="gray"
-                                    height="24px"
-                                    border-radius="12px 0 12px 0"
-                                    fill-border-radius="12px 0 12px 0"
-                                >
-                                    {{ optedOutDailyPreferences.length }}
-                                </n-progress>
-                            </n-gi>
-                            <n-gi :span="1">
-                                A
-                            </n-gi>
-                            <n-gi :span="7">
-                                <n-progress
-                                    :percentage="dailyPreferences.filter(p => p.size.includes('A')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
-                                    status="info"
-                                    height="24px"
-                                    border-radius="12px 0 12px 0"
-                                    fill-border-radius="12px 0 12px 0"
-                                >
-                                    {{ dailyPreferences.filter(p => p.size.includes('A')).length }}
-                                </n-progress>
-                            </n-gi>
-                            <n-gi :span="1">
-                                B
-                            </n-gi>
-                            <n-gi :span="7">
-                                <n-progress
-                                    :percentage="dailyPreferences.filter(p => p.size.includes('B')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
-                                    status="success"
-                                    height="24px"
-                                    border-radius="12px 0 12px 0"
-                                    fill-border-radius="12px 0 12px 0"
-                                >
-                                    {{ dailyPreferences.filter(p => p.size.includes('B')).length }}
-                                </n-progress>
-                            </n-gi>
-                            <n-gi :span="1">
-                                C
-                            </n-gi>
-                            <n-gi :span="7">
-                                <n-progress
-                                    :percentage="dailyPreferences.filter(p => p.size.includes('C')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
-                                    status="warning"
-                                    height="24px"
-                                    border-radius="12px 0 12px 0"
-                                    fill-border-radius="12px 0 12px 0"
-                                >
-                                    {{ dailyPreferences.filter(p => p.size.includes('C')).length }}
-                                </n-progress>
-                            </n-gi>
-                            <n-gi :span="1">
-                                D
-                            </n-gi>
-                            <n-gi :span="7">
-                                <n-progress
-                                    :percentage="dailyPreferences.filter(p => p.size.includes('D')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
-                                    status="error"
-                                    height="24px"
-                                    border-radius="12px 0 12px 0"
-                                    fill-border-radius="12px 0 12px 0"
-                                >
-                                    {{ dailyPreferences.filter(p => p.size.includes('D')).length }}
-                                </n-progress>
-                            </n-gi>
-                            <n-gi :span="1">
-                                Total
-                            </n-gi>
-                            <n-gi :span="7">
-                                <n-progress
-                                    :percentage="dailyPreferences.length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
-                                    status="info"
-                                    height="24px"
-                                    border-radius="12px 0 12px 0"
-                                    fill-border-radius="12px 0 12px 0"
-                                >
-                                    {{ dailyPreferences.length }}
-                                </n-progress>
-                            </n-gi>
-                        </n-grid>
-                    </n-card>
+                    <CountSummaryCard :dailyPreferences="dailyPreferences" :optedOutDailyPreferences="optedOutDailyPreferences" />
                 </n-gi>
             </n-grid>
             
@@ -139,9 +44,9 @@
                             <n-button info ghost round v-for="zone in zoneList" :key="zone" @click="filter('zone', zone)">{{ zone }}</n-button>
                         </n-space>
                     </n-popover>
-                    <n-button info ghost round>Status</n-button>
                 </n-space>
-                <n-space>
+                <n-space horizontal justify="space-between">
+                    <n-input v-model:value="search" v-on:input="updateSearchFilter" placeholder="Search Households" style="width: 250px;" />
                     <n-button secondary type="primary" @click="downloadCSV">Download CSV</n-button>
                 </n-space>
                 <n-data-table ref="dataTableRef" :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
@@ -220,13 +125,13 @@
                         <h4 class="preference-modal-label" align-text="right">Notes:</h4>
                     </n-gi>
                     <n-gi :span="3">
-                        <n-text>{{ showPreferenceModal.notes }}</n-text>
+                        <n-input v-model:value="showPreferenceModal.notes" type="textarea" style="width: 100%;" />
                     </n-gi>
                     <n-gi :span="1">
                         <h4 class="preference-modal-label" align-text="right">Status:</h4>
                     </n-gi>
                     <n-gi :span="3">
-                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" style="width: 250px;" />
+                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" style="width: 100%" />
                     </n-gi>
                     <n-gi :span="1">
                         <n-button v-bind:disabled="showPreferenceModal.loading" type="primary" @click="onUpdatePreference">Update</n-button>
@@ -238,15 +143,16 @@
 </template>
 
 <script setup>
-import { h, ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { DateTime } from 'luxon'
 import { Calendar } from '@vicons/ionicons5'
+import { DateTime } from 'luxon'
 import { NButton, useMessage } from 'naive-ui'
+import { computed, h, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { apiUrl } from '@/utils/helpers'
 
-import MenuListItem from '@/components/atoms/MenuListItem.vue'
+import CountSummaryCard from '@/components/organisms/CountSummaryCard.vue'
+import MenuList from '@/components/organisms/MenuList.vue'
 
 const route = useRoute();
 const day = route.params.day.charAt(0).toUpperCase() + route.params.day.slice(1);
@@ -330,7 +236,7 @@ const dailyPreferencesColumns = [
     {
         key: 'headOfHouseholdName',
         title: 'Household',
-        width: 100,
+        width: 50,
         ellipsis: {
             tooltip: true
         },
@@ -340,21 +246,33 @@ const dailyPreferencesColumns = [
             if (a < b) return -1;
             if (a > b) return 1;
             return 0;
-        }
+        },
+        filter(value, row) {
+            return ~row.headOfHouseholdName.toLowerCase().indexOf(value.toLowerCase());
+        },
     },
     {
-        key: 'status',
-        title: 'Status',
-        className: 'status',
-        width: 50,
-        sorter: (rowA, rowB) => {
-            const a = rowA.status ? rowA.status.toLowerCase() : '';
-            const b = rowB.status ? rowB.status.toLowerCase() : '';
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0;
+        key: 'notes',
+        title: 'Notes',
+        className: 'notes',
+        width: 100,
+        ellipsis: {
+            tooltip: true
         }
     },
+    // {
+    //     key: 'status',
+    //     title: 'Status',
+    //     className: 'status',
+    //     width: 50,
+    //     sorter: (rowA, rowB) => {
+    //         const a = rowA.status ? rowA.status.toLowerCase() : '';
+    //         const b = rowB.status ? rowB.status.toLowerCase() : '';
+    //         if (a < b) return -1;
+    //         if (a > b) return 1;
+    //         return 0;
+    //     }
+    // },
     {
         key: 'edit',
         title: '',
@@ -410,6 +328,19 @@ const filter = (type, value) => {
     }
 }
 
+const search = ref('');
+const updateSearchFilter = () => {
+    if (search.value === '') {
+        dataTableRef.value.filter(null);
+        currentFilter.value = 'none';
+    } else {
+        currentFilter.value = 'none';
+        dataTableRef.value.filter({
+            headOfHouseholdName: [search.value],
+        });
+    }
+}
+
 const downloadCSV = () => dataTableRef.value?.downloadCsv({
     fileName: `${day}-${date.toFormat('yyyyLLdd')}.csv`,
     keepOriginalData: true,
@@ -442,6 +373,7 @@ const statusOptions = [
 const onOpenPreferenceModal = (row) => {
     showPreferenceModal.value.show = true;
     showPreferenceModal.value.loading = false;
+    showPreferenceModal.value.date = date;
     showPreferenceModal.value.weeklyMenuId = menuData.value.weekId;
     showPreferenceModal.value.fillScheduleId = menuData.value.fillScheduleId;
     showPreferenceModal.value.dailyMenuId = menuData.value.menuId;
