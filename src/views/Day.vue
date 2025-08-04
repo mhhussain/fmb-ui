@@ -10,28 +10,141 @@
         </n-space>
 
         <n-space class="day-container" vertical>
-            <n-space class="menu-container" vertical>
-                <h3 style="font-weight: bold;">Menu</h3>
-                <n-divider></n-divider>
-                <MenuListItem v-for="item in menuData.menu" :key="item.dailyMenuItemId" :name="item.description" />
-                <n-divider></n-divider>
-                <n-button class="add-menu-item-button" type="info" dashed>
-                    Add Menu Item
-                </n-button>
-                <n-divider></n-divider>
-            </n-space>
+            <n-grid :x-gap="12" :y-gap="12" :cols="12">
+                <n-gi :span="6">
+                    <h3 style="font-weight: bold;">Menu</h3>
+                    <n-divider></n-divider>
+                    <MenuListItem v-for="item in menuData.menu" :key="item.dailyMenuItemId" :name="item.description" />
+                    <n-divider></n-divider>
+                    <n-button class="add-menu-item-button" type="info" dashed>
+                        Add Menu Item
+                    </n-button>
+                    <n-divider></n-divider>
+                </n-gi>
+                <n-gi :span="6">
+                    <h3 style="font-weight: bold;">Count Summary</h3>
+                    <n-card>
+                        <n-grid :x-gap="12" :y-gap="12" :cols="8">
+                            <n-gi :span="1">
+                                X
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="optedOutDailyPreferences.length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    color="gray"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ optedOutDailyPreferences.length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                A
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('A')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="info"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('A')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                B
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('B')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="success"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('B')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                C
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('C')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="warning"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('C')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                D
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('D')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="error"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('D')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                Total
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="info"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.length }}
+                                </n-progress>
+                            </n-gi>
+                        </n-grid>
+                    </n-card>
+                </n-gi>
+            </n-grid>
             
             <n-space class="daily-preferences-container" vertical>
                 <h3 style="font-weight: bold;">Daily Preferences ({{ dailyPreferences.length }})</h3>
                 <n-alert v-if="!pastCutoffOrDate" type="warning">Thaali cutoff has not been reached for this day, menu preferences are not final.</n-alert>
                 <n-space horizontal>
-                    <n-text>Group by:</n-text>
-                    <n-button info ghost round>None</n-button>
-                    <n-button info ghost round>Size</n-button>
-                    <n-button info ghost round>Zone</n-button>
+                    <n-text>Filter by:</n-text>
+                    <n-button round :type="currentFilter === 'none' ? 'info' : 'default'" @click="filter('none', 'none')">None</n-button>
+                    <n-popover triggger="click" placement="bottom">
+                        <template #trigger>
+                            <n-button round :type="currentFilter === 'size' ? 'info' : 'default'" @click="filter('size', 'none')">Size</n-button>
+                        </template>
+                        <n-space>
+                            <n-button info ghost round @click="filter('size', 'A')">A</n-button>
+                            <n-button info ghost round @click="filter('size', 'B')">B</n-button>
+                            <n-button info ghost round @click="filter('size', 'C')">C</n-button>
+                            <n-button info ghost round @click="filter('size', 'D')">D</n-button>
+                        </n-space>
+                    </n-popover>
+                    <n-popover triggger="click" placement="bottom">
+                        <template #trigger>
+                            <n-button round :type="currentFilter === 'zone' ? 'info' : 'default'" @click="filter('zone', 'none')">Zone</n-button>
+                        </template>
+                        <n-space>
+                            <n-button info ghost round v-for="zone in zoneList" :key="zone" @click="filter('zone', zone)">{{ zone }}</n-button>
+                        </n-space>
+                    </n-popover>
                     <n-button info ghost round>Status</n-button>
                 </n-space>
-                <n-data-table :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
+                <n-space>
+                    <n-button secondary type="primary" @click="downloadCSV">Download CSV</n-button>
+                </n-space>
+                <n-data-table ref="dataTableRef" :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
                 
                 <h3 style="font-weight: bold;">Opted Out ({{ optedOutDailyPreferences.length }})</h3>
                 <n-data-table :columns="dailyPreferencesColumns" :data="optedOutDailyPreferences" :pagination="optedOutDailyPreferencesPagination" />
@@ -54,57 +167,71 @@
         </n-space>
 
         <n-modal v-model:show="showPreferenceModal.show" :on-after-leave="onClosePreferenceModal" class="preference-modal">
-            <n-card :title="`${day} Preference Update`">
-                <n-space vertical>
-                    <n-space horizontal>
-                        <n-text>Household Preference ID:</n-text>
-                        <n-text>{{ showPreferenceModal.householdFillMenuPreferenceId }}</n-text>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Household:</n-text>
+            <n-card header-class="preference-modal-header">
+                <template #header>
+                    {{ date.toFormat('EEEE, MMM d') }} Preference Update
+                </template>
+                <n-grid :x-gap="12" :y-gap="12" :cols="4">
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Household:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
                         <n-text>{{ showPreferenceModal.headOfHouseholdName }}</n-text>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Zone:</n-text>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Zone:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
                         <n-text>{{ showPreferenceModal.zoneName }}</n-text>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Phone:</n-text>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Phone:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
                         <n-text>{{ showPreferenceModal.thaaliContactPhone }} ({{ showPreferenceModal.thaaliContactName }})</n-text>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Size:</n-text>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Size:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
                         <n-radio :checked="showPreferenceModal.thaaliSize === 'X'" @click="onThaaliSizeChange('X')">X</n-radio>
                         <n-radio :checked="showPreferenceModal.thaaliSize === 'A'" @click="onThaaliSizeChange('A')">A</n-radio>
                         <n-radio :checked="showPreferenceModal.thaaliSize === 'B'" @click="onThaaliSizeChange('B')">B</n-radio>
                         <n-radio :checked="showPreferenceModal.thaaliSize === 'C'" @click="onThaaliSizeChange('C')">C</n-radio>
                         <n-radio :checked="showPreferenceModal.thaaliSize === 'D'" @click="onThaaliSizeChange('D')">D</n-radio>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Mehman Thaali:</n-text>
-                        <n-checkbox v-model:checked="showPreferenceModal.mehmanThaali" @click="onMehmanThaaliChange(showPreferenceModal.mehmanThaali)">
-                        </n-checkbox>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Mehman Thaali Size:</n-text>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Mehman Thaali:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
+                        <n-checkbox v-model:checked="showPreferenceModal.mehmanThaali" @click="onMehmanThaaliChange(showPreferenceModal.mehmanThaali)" />
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Mehman Thaali Size:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
                         <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('X')" @click="onMehmanThaaliSizeChange('X')">X</n-radio>
                         <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('A')" @click="onMehmanThaaliSizeChange('A')">A</n-radio>
                         <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('B')" @click="onMehmanThaaliSizeChange('B')">B</n-radio>
                         <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('C')" @click="onMehmanThaaliSizeChange('C')">C</n-radio>
                         <n-radio :checked="showPreferenceModal.mehmanThaaliSize.includes('D')" @click="onMehmanThaaliSizeChange('D')">D</n-radio>
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Notes:</n-text>
-                        <n-input v-model:value="showPreferenceModal.notes" />
-                    </n-space>
-                    <n-space horizontal>
-                        <n-text>Status:</n-text>
-                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" />
-                    </n-space>
-                    <n-space horizontal>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Notes:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
+                        <n-text>{{ showPreferenceModal.notes }}</n-text>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Status:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
+                        <n-select v-model:value="showPreferenceModal.status" :options="statusOptions" style="width: 250px;" />
+                    </n-gi>
+                    <n-gi :span="1">
                         <n-button v-bind:disabled="showPreferenceModal.loading" type="primary" @click="onUpdatePreference">Update</n-button>
-                    </n-space>
-                </n-space>
+                    </n-gi>
+                </n-grid>
             </n-card>
         </n-modal>
     </div>
@@ -128,6 +255,8 @@ let date;
 const message = useMessage();
 
 // DAILY PREFERENCES TABLE CONFIGURATION
+const dataTableRef = ref(null);
+
 switch (day) {
     case 'Monday':
         date = DateTime.fromFormat(route.params.startDate, 'yyyyLLdd');
@@ -153,13 +282,32 @@ const dailyPreferencesColumns = [
     {
         key: 'thaaliContainerNumber',
         title: 'No.',
-        width: 30
+        width: 30,
+        sorter: (rowA, rowB) => {
+            const a = parseInt(rowA.thaaliContainerNumber, 10);
+            const b = parseInt(rowB.thaaliContainerNumber, 10);
+            const aNaN = isNaN(a);
+            const bNaN = isNaN(b);
+            if (aNaN && bNaN) return 0;
+            if (aNaN) return 1;
+            if (bNaN) return -1;
+            return a - b;
+        }
     },
     {
         key: 'size',
         title: 'Size',
         className: 'size',
-        width: 30
+        width: 30,
+        sorter: (rowA, rowB) => {
+            const order = { A: 1, B: 2, C: 3, D: 4 };
+            const a = order[rowA.size] || 99;
+            const b = order[rowB.size] || 99;
+            return a - b;
+        },
+        filter(value, row) {
+            return ~row.size.indexOf(value);
+        },
     },
     {
         key: 'zoneName',
@@ -167,7 +315,17 @@ const dailyPreferencesColumns = [
         width: 50,
         ellipsis: {
             tooltip: true
-        }
+        },
+        sorter: (rowA, rowB) => {
+            const a = rowA.zoneName ? rowA.zoneName.toLowerCase() : '';
+            const b = rowB.zoneName ? rowB.zoneName.toLowerCase() : '';
+            if (a < b) return -1;
+            if (a > b) return 1;
+            return 0;
+        },
+        filter(value, row) {
+            return ~row.zoneName.indexOf(value);
+        },
     },
     {
         key: 'headOfHouseholdName',
@@ -175,13 +333,27 @@ const dailyPreferencesColumns = [
         width: 100,
         ellipsis: {
             tooltip: true
+        },
+        sorter: (rowA, rowB) => {
+            const a = rowA.headOfHouseholdName ? rowA.headOfHouseholdName.toLowerCase() : '';
+            const b = rowB.headOfHouseholdName ? rowB.headOfHouseholdName.toLowerCase() : '';
+            if (a < b) return -1;
+            if (a > b) return 1;
+            return 0;
         }
     },
     {
         key: 'status',
         title: 'Status',
         className: 'status',
-        width: 50
+        width: 50,
+        sorter: (rowA, rowB) => {
+            const a = rowA.status ? rowA.status.toLowerCase() : '';
+            const b = rowB.status ? rowB.status.toLowerCase() : '';
+            if (a < b) return -1;
+            if (a > b) return 1;
+            return 0;
+        }
     },
     {
         key: 'edit',
@@ -217,6 +389,31 @@ const rowClass = (row) => {
     }
     return classes;
 }
+
+const currentFilter = ref('none');
+const filter = (type, value) => {
+    if (type === 'none') {
+        dataTableRef.value.filter(null);
+        currentFilter.value = 'none';
+    }
+    if (type === 'size') {
+        currentFilter.value = 'size';
+        dataTableRef.value.filter({
+            size: [value],
+        });
+    }
+    if (type === 'zone') {
+        currentFilter.value = 'zone';
+        dataTableRef.value.filter({
+            zoneName: [value],
+        });
+    }
+}
+
+const downloadCSV = () => dataTableRef.value?.downloadCsv({
+    fileName: `${day}-${date.toFormat('yyyyLLdd')}.csv`,
+    keepOriginalData: true,
+});
 
 // MODAL CONFIGURATION
 const statusOptions = [
@@ -418,6 +615,10 @@ const pastCutoffOrDate = computed(() => {
     return cutoff < now.minus({ hours: 5 }) || menuDate < now.minus({ hours: 5 });
 });
 
+const zoneList = computed(() => {
+    return menuData.value.dailyPreferences.map(item => item.zoneName).filter((item, index, self) => self.indexOf(item) === index).sort();
+});
+
 // API CALLS
 
 const getMenuData = async () => {
@@ -459,6 +660,11 @@ onMounted(async () => {
     padding-bottom: 24px;
 }
 
+.count-summary-container {
+    max-width: 50%;
+    padding-bottom: 24px;
+}
+
 .daily-preferences-container {
     /* max-width: 70%; */
 }
@@ -487,5 +693,10 @@ onMounted(async () => {
 
 .preference-modal {
     width: 50%;
+}
+
+.preference-modal-label {
+    font-weight: bold;
+    text-align: right;
 }
 </style>

@@ -6,7 +6,7 @@
       <n-layout-header bordered>
         <div class="header-content">
           <div class="header-left">
-            <h1>FMB Admin</h1>
+            <h1>FMB Admin - {{ env }}</h1>
           </div>
 
           <div class="header-center">
@@ -55,21 +55,30 @@
 </template>
 
 <script setup>
-import { ref, computed, h } from 'vue'
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useMessage } from 'naive-ui'
 import { 
-  MenuOutline, 
   PersonOutline, 
   ChevronDownOutline,
-  PeopleOutline,
-  HomeOutline,
-  RestaurantOutline,
-  CalendarOutline,
-  SettingsOutline,
-  BarChartOutline
 } from '@vicons/ionicons5'
 import { useAuthStore } from '@/stores/auth'
+
+import { apiUrl } from '@/utils/helpers';
+const env = computed(() => {
+  let env = '';
+  if (apiUrl.includes('us-central1-xyz-moohh-fmbmobile-test.cloudfunctions.net')) {
+    env = 'Test';
+  } else if (apiUrl.includes('us-central1-xyz-moohh-fmbmobile.cloudfunctions.net')) {
+    env = 'Prod';
+  } else if (apiUrl.includes('127.0.0.1:5001')) {
+    env = 'Local';
+  } else {
+    env = 'Unknown';
+  }
+
+  return env;
+})
 
 const router = useRouter()
 const route = useRoute()
@@ -121,6 +130,7 @@ const nav = () => {
 
 <style scoped>
 .header-content {
+  background-color: #F8D3AF;
   display: flex;
   align-items: center;
   justify-content: space-between;
