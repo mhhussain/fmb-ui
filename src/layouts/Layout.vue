@@ -27,7 +27,7 @@
                 <template #icon>
                   <n-icon><PersonOutline /></n-icon>
                 </template>
-                {{ user?.name || 'Admin' }}
+                {{ user?.ITSID || 'Admin' }}
                 <template #suffix>
                   <n-icon><ChevronDownOutline /></n-icon>
                 </template>
