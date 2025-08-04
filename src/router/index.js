@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import Layout from '@/layouts/Layout.vue'
 import Login from '@/views/Login.vue'
+import PrivacyAndTerms from '@/views/PrivacyAndTerms.vue'
 
 const routes = [
   {
@@ -19,6 +20,12 @@ const routes = [
         path: '',
         name: 'Weeks',
         component: () => import('@/views/Weeks.vue'),
+      },
+      {
+        path: '/policy',
+        name: 'PrivacyAndTerms',
+        component: PrivacyAndTerms,
+        meta: { requiresAuth: false }
       },
       {
         path: 'week/:startDate',
