@@ -110,4 +110,8 @@ const optedOutDailyPreferences = computed(() => props.optedOutDailyPreferences);
 </script>
 
 <style scoped>
+.n-card {
+    background: #f5f5f5;
+    border: 0;
+}
 </style>
