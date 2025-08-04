@@ -44,9 +44,9 @@
                             <n-button info ghost round v-for="zone in zoneList" :key="zone" @click="filter('zone', zone)">{{ zone }}</n-button>
                         </n-space>
                     </n-popover>
-                    <n-button info ghost round>Status</n-button>
                 </n-space>
-                <n-space>
+                <n-space horizontal justify="space-between">
+                    <n-input v-model:value="search" v-on:input="updateSearchFilter" placeholder="Search Households" style="width: 250px;" />
                     <n-button secondary type="primary" @click="downloadCSV">Download CSV</n-button>
                 </n-space>
                 <n-data-table ref="dataTableRef" :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
@@ -246,7 +246,10 @@ const dailyPreferencesColumns = [
             if (a < b) return -1;
             if (a > b) return 1;
             return 0;
-        }
+        },
+        filter(value, row) {
+            return ~row.headOfHouseholdName.toLowerCase().indexOf(value.toLowerCase());
+        },
     },
     {
         key: 'notes',
@@ -321,6 +324,19 @@ const filter = (type, value) => {
         currentFilter.value = 'zone';
         dataTableRef.value.filter({
             zoneName: [value],
+        });
+    }
+}
+
+const search = ref('');
+const updateSearchFilter = () => {
+    if (search.value === '') {
+        dataTableRef.value.filter(null);
+        currentFilter.value = 'none';
+    } else {
+        currentFilter.value = 'none';
+        dataTableRef.value.filter({
+            headOfHouseholdName: [search.value],
         });
     }
 }
