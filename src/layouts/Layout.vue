@@ -50,6 +50,13 @@
           <router-view />
         </div>
       </n-layout-content>
+
+      <n-layout-footer bordered>
+        <n-space justify="right">
+          <n-text>FMB Administration</n-text>
+          <n-text>Copyright 2025</n-text>
+        </n-space>
+      </n-layout-footer>
     </n-layout>
   </n-layout>
 </template>
