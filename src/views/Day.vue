@@ -10,26 +10,119 @@
         </n-space>
 
         <n-space class="day-container" vertical>
-            <n-space class="menu-container" vertical>
-                <h3 style="font-weight: bold;">Menu</h3>
-                <n-divider></n-divider>
-                <MenuListItem v-for="item in menuData.menu" :key="item.dailyMenuItemId" :name="item.description" />
-                <n-divider></n-divider>
-                <n-button class="add-menu-item-button" type="info" dashed>
-                    Add Menu Item
-                </n-button>
-                <n-divider></n-divider>
-            </n-space>
+            <n-grid :x-gap="12" :y-gap="12" :cols="12">
+                <n-gi :span="6">
+                    <h3 style="font-weight: bold;">Menu</h3>
+                    <n-divider></n-divider>
+                    <MenuListItem v-for="item in menuData.menu" :key="item.dailyMenuItemId" :name="item.description" />
+                    <n-divider></n-divider>
+                    <n-button class="add-menu-item-button" type="info" dashed>
+                        Add Menu Item
+                    </n-button>
+                    <n-divider></n-divider>
+                </n-gi>
+                <n-gi :span="6">
+                    <h3 style="font-weight: bold;">Count Summary</h3>
+                    <n-card>
+                        <n-grid :x-gap="12" :y-gap="12" :cols="8">
+                            <n-gi :span="1">
+                                X
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="optedOutDailyPreferences.length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    color="gray"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ optedOutDailyPreferences.length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                A
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('A')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="info"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('A')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                B
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('B')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="success"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('B')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                C
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('C')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="warning"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('C')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                D
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.filter(p => p.size.includes('D')).length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="error"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.filter(p => p.size.includes('D')).length }}
+                                </n-progress>
+                            </n-gi>
+                            <n-gi :span="1">
+                                Total
+                            </n-gi>
+                            <n-gi :span="7">
+                                <n-progress
+                                    :percentage="dailyPreferences.length / (dailyPreferences.length + optedOutDailyPreferences.length) * 100"
+                                    status="info"
+                                    height="24px"
+                                    border-radius="12px 0 12px 0"
+                                    fill-border-radius="12px 0 12px 0"
+                                >
+                                    {{ dailyPreferences.length }}
+                                </n-progress>
+                            </n-gi>
+                        </n-grid>
+                    </n-card>
+                </n-gi>
+            </n-grid>
             
             <n-space class="daily-preferences-container" vertical>
                 <h3 style="font-weight: bold;">Daily Preferences ({{ dailyPreferences.length }})</h3>
                 <n-alert v-if="!pastCutoffOrDate" type="warning">Thaali cutoff has not been reached for this day, menu preferences are not final.</n-alert>
                 <n-space horizontal>
-                    <n-text>Group by:</n-text>
-                    <n-button info ghost round @click="filter('none', 'none')">None</n-button>
+                    <n-text>Filter by:</n-text>
+                    <n-button round :type="currentFilter === 'none' ? 'info' : 'default'" @click="filter('none', 'none')">None</n-button>
                     <n-popover triggger="click" placement="bottom">
                         <template #trigger>
-                            <n-button info ghost round>Size</n-button>
+                            <n-button round :type="currentFilter === 'size' ? 'info' : 'default'" @click="filter('size', 'none')">Size</n-button>
                         </template>
                         <n-space>
                             <n-button info ghost round @click="filter('size', 'A')">A</n-button>
@@ -40,13 +133,16 @@
                     </n-popover>
                     <n-popover triggger="click" placement="bottom">
                         <template #trigger>
-                            <n-button info ghost round>Zone</n-button>
+                            <n-button round :type="currentFilter === 'zone' ? 'info' : 'default'" @click="filter('zone', 'none')">Zone</n-button>
                         </template>
                         <n-space>
                             <n-button info ghost round v-for="zone in zoneList" :key="zone" @click="filter('zone', zone)">{{ zone }}</n-button>
                         </n-space>
                     </n-popover>
                     <n-button info ghost round>Status</n-button>
+                </n-space>
+                <n-space>
+                    <n-button secondary type="primary" @click="downloadCSV">Download CSV</n-button>
                 </n-space>
                 <n-data-table ref="dataTableRef" :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
                 
@@ -294,21 +390,30 @@ const rowClass = (row) => {
     return classes;
 }
 
+const currentFilter = ref('none');
 const filter = (type, value) => {
     if (type === 'none') {
         dataTableRef.value.filter(null);
+        currentFilter.value = 'none';
     }
     if (type === 'size') {
+        currentFilter.value = 'size';
         dataTableRef.value.filter({
             size: [value],
         });
     }
     if (type === 'zone') {
+        currentFilter.value = 'zone';
         dataTableRef.value.filter({
             zoneName: [value],
         });
     }
 }
+
+const downloadCSV = () => dataTableRef.value?.downloadCsv({
+    fileName: `${day}-${date.toFormat('yyyyLLdd')}.csv`,
+    keepOriginalData: true,
+});
 
 // MODAL CONFIGURATION
 const statusOptions = [
@@ -551,6 +656,11 @@ onMounted(async () => {
 }
 
 .menu-container {
+    max-width: 50%;
+    padding-bottom: 24px;
+}
+
+.count-summary-container {
     max-width: 50%;
     padding-bottom: 24px;
 }
