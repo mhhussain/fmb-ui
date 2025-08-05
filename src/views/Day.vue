@@ -96,6 +96,12 @@
                         <n-text>{{ showPreferenceModal.thaaliContactPhone }} ({{ showPreferenceModal.thaaliContactName }})</n-text>
                     </n-gi>
                     <n-gi :span="1">
+                        <h4 class="preference-modal-label" align-text="right">Default Size:</h4>
+                    </n-gi>
+                    <n-gi :span="3">
+                        <n-text>{{ showPreferenceModal.defaultPreference }}</n-text>
+                    </n-gi>
+                    <n-gi :span="1">
                         <h4 class="preference-modal-label" align-text="right">Size:</h4>
                     </n-gi>
                     <n-gi :span="3">
@@ -385,6 +391,8 @@ const onOpenPreferenceModal = (row) => {
     showPreferenceModal.value.thaaliContactVerified = row.thaaliContactVerified;
     showPreferenceModal.value.householdFillMenuPreferenceId = row.householdFillMenuPreferenceId;
     showPreferenceModal.value.isOptedIn = row.isOptedIn;
+    showPreferenceModal.value.defaultIsOptedIn = row.defaultIsOptedIn;
+    showPreferenceModal.value.defaultPreference = row.defaultPreference;
     showPreferenceModal.value.thaaliSize = row.size;
     showPreferenceModal.value.mehmanThaali = row.householdFillMenuPreferenceId != 0 ? menuData.value.dailyPreferences.find(item => item.householdFillMenuPreferenceId === row.householdFillMenuPreferenceId && item.mehmanThaali)?.mehmanThaali ? true : false : false;
     showPreferenceModal.value.mehmanThaaliSize = row.householdFillMenuPreferenceId != 0 ? menuData.value.dailyPreferences.find(item => item.householdFillMenuPreferenceId === row.householdFillMenuPreferenceId && item.mehmanThaali)?.size ?? 'X' : 'X';
@@ -407,6 +415,8 @@ const onClosePreferenceModal = () => {
     showPreferenceModal.value.thaaliContactVerified = false;
     showPreferenceModal.value.householdFillMenuPreferenceId = 0;
     showPreferenceModal.value.isOptedIn = false;
+    showPreferenceModal.value.defaultIsOptedIn = false;
+    showPreferenceModal.value.defaultPreference = 'X';
     showPreferenceModal.value.thaaliSize = 'X';
     showPreferenceModal.value.mehmanThaali = false;
     showPreferenceModal.value.mehmanThaaliSize = 'X';
@@ -507,6 +517,8 @@ const showPreferenceModal = ref({
     thaaliContactPhone: '',
     thaaliContactVerified: false,
     householdFillMenuPreferenceId: 0,
+    defaultIsOptedIn: false,
+    defaultPreference: 'X',
     isOptedIn: false,   
     thaaliSize: 'X',
     mehmanThaali: false,
@@ -529,15 +541,15 @@ const menuData = ref({
 });
 
 const dailyPreferences = computed(() => {
-    return menuData.value.dailyPreferences.filter(item => item.isOptedIn && item.defaultIsOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+    return menuData.value.dailyPreferences.filter(item => item.isOptedIn && (item.defaultIsOptedIn || item.householdFillMenuPreferenceId)).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
 });
 
 const optedOutDailyPreferences = computed(() => {
-    return menuData.value.dailyPreferences.filter(item => !item.isOptedIn && item.defaultIsOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+    return menuData.value.dailyPreferences.filter(item => !item.isOptedIn && (item.defaultIsOptedIn || item.householdFillMenuPreferenceId)).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
 });
 
 const defaultedOutDailyPreferences = computed(() => {
-    return menuData.value.dailyPreferences.filter(item => !item.defaultIsOptedIn).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
+    return menuData.value.dailyPreferences.filter(item => !item.defaultIsOptedIn && !item.householdFillMenuPreferenceId).sort((a, b) => a.thaaliContainerNumber - b.thaaliContainerNumber);
 });
 
 const pastCutoffOrDate = computed(() => {
