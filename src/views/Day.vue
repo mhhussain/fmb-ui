@@ -99,7 +99,7 @@
                         <h4 class="preference-modal-label" align-text="right">Default Size:</h4>
                     </n-gi>
                     <n-gi :span="3">
-                        <n-text>{{ showPreferenceModal.defaultPreference }}</n-text>
+                        <n-text>{{ showPreferenceModal.defaultIsOptedIn ? showPreferenceModal.defaultPreference : 'Opted Out' }}</n-text>
                     </n-gi>
                     <n-gi :span="1">
                         <h4 class="preference-modal-label" align-text="right">Size:</h4>
