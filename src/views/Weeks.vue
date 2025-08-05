@@ -13,27 +13,25 @@
                         <n-icon size="32">
                             <Calendar />
                         </n-icon>
-                        <h1>
+                        <h3>
                             {{ convertToLocalDate(week.weekStart).toFormat('MMM d, yyyy') }}
-                        </h1>
+                        </h3>
                     </n-space>
                     <n-space>
                         <n-text>
-                            Cutoff: {{ convertToLocalDate(week.cutoffDateAndTime).toFormat('MMM d h:mm a') }}
+                            Cutoff: {{ convertToLocalDate(week.cutoffDateAndTime).toFormat('MMM d, h:mm a') }}
                         </n-text>
                     </n-space>
                 </n-space>
             </template>
             <n-grid :cols="3">
                 <n-grid-item v-for="menu in week.menus" :key="menu.menuId">
-                    <n-card>
+                    <n-card class="menu-card">
                         <n-space vertical>
                             <h3>{{ convertToLocalDate(menu.menuDate).toFormat('EEE, MMM d') }}</h3>
-                            <n-list>
-                                <n-list-item v-for="item in menu.menu" :key="item.dailyMenuItemId">
-                                    {{ item.description }}
-                                </n-list-item>
-                            </n-list>
+                            <n-text v-for="item in menu.menu" :key="item.dailyMenuItemId">
+                                {{ item.description }}
+                            </n-text>
                         </n-space>
                     </n-card>
                 </n-grid-item>
@@ -63,4 +61,12 @@ const navigateToWeek = (week) => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.menu-card {
+    border: 0;
+}
+
+.menu-card :deep(h3) {
+    font-weight: bold;
+}
+</style>
