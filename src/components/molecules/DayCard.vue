@@ -12,9 +12,6 @@
             <n-space v-if="!dayData.menu || dayData.menu.length === 0">
                 <n-text class="no-thaali-text">No Thaali</n-text>
             </n-space>
-            <template #footer>
-                placeholder
-            </template>
         </n-card>
     </n-space>
 </template>
@@ -73,5 +70,10 @@ const onClickDay = (dayName) => {
 
 .no-thaali-text {
     font-style: italic;
+}
+
+.n-card {
+    background-color: #F5F5F5;
+    border: 0;
 }
 </style>
