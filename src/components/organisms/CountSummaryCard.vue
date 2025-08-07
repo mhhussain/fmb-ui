@@ -1,5 +1,5 @@
 <template>
-    <h3 style="font-weight: bold;">Count Summary</h3>
+    <h3 style="font-weight: bold;">Thaali Counts</h3>
     <n-card>
         <n-grid :x-gap="12" :y-gap="12" :cols="8">
             <n-gi :span="1">

@@ -20,7 +20,7 @@
             </n-grid>
             
             <n-space class="daily-preferences-container" vertical>
-                <h3 style="font-weight: bold;">Daily Preferences ({{ dailyPreferences.length }})</h3>
+                <h3 style="font-weight: bold;">Daily Thaalis ({{ dailyPreferences.length }})</h3>
                 <n-alert v-if="!pastCutoffOrDate" type="warning">Thaali cutoff has not been reached for this day, menu preferences are not final.</n-alert>
                 <n-space horizontal>
                     <n-text>Filter by:</n-text>
@@ -51,7 +51,7 @@
                 </n-space>
                 <n-data-table ref="dataTableRef" :columns="dailyPreferencesColumns" :data="dailyPreferences" :row-class-name="rowClass" :pagination="dailyPreferencesPagination" />
                 
-                <h3 style="font-weight: bold;">Opted Out ({{ optedOutDailyPreferences.length }})</h3>
+                <h3 style="font-weight: bold;">Cancelled ({{ optedOutDailyPreferences.length }})</h3>
                 <n-data-table :columns="dailyPreferencesColumns" :data="optedOutDailyPreferences" :pagination="optedOutDailyPreferencesPagination" />
 
                 <n-space horizontal>

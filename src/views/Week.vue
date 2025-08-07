@@ -19,6 +19,11 @@
             </n-space>
             
             <n-space class="sidebar-container">
+                <n-date-picker
+                    type="datetime"
+                    format="EEE, LLL d, h:mm a"
+                    v-model:value="week.cutoffTimestamp"
+                />
                 <n-card title="Stats">
                     <n-grid :cols="6" :x-gap="12" :y-gap="12">
                         <n-grid-item :span="5">
@@ -53,14 +58,13 @@ import { apiUrl, convertToLocalDate } from '@/utils/helpers'
 
 import DayCard from '@/components/molecules/DayCard.vue'
 
-import { sampleWeekData } from '@/utils/sample-data'
-
 const route = useRoute();
 const weekStart = DateTime.fromFormat(route.params.startDate, 'yyyyLLdd');
 
 const week = ref({
     weekStart: '',
-    cutoffDate: '',
+    cutoffDateAndTime: '',
+    cutoffTimestamp: 0,
     stats: {},
     monday: {},
     tuesday: {},
@@ -73,12 +77,13 @@ const week = ref({
 
 onMounted(async () => {
     const response = await axios.get(`${apiUrl}/api/v2/admin/week/${weekStart.toFormat('yyyyLLdd')}`);
-    week.value.weekStart = response.data[0].weekStart;
+    week.value.weekStart = convertToLocalDate(response.data[0].weekStart);
     week.value.cutoffDateAndTime = response.data[0].cutoffDateAndTime;
+    week.value.cutoffTimestamp = convertToLocalDate(response.data[0].cutoffDateAndTime).toMillis();
 
     // Monday
     const mondayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 1);
-    week.value.monday = {
+    week.value.monday = mondayMenu ? {
         name: 'Monday',
         date: convertToLocalDate(mondayMenu.menuDate),
         stats: {
@@ -92,11 +97,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: mondayMenu.menu,
-    };
+    } : {};
 
     // Tuesday
     const tuesdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 2);
-    week.value.tuesday = {
+    week.value.tuesday = tuesdayMenu ? {
         name: 'Tuesday',
         date: convertToLocalDate(tuesdayMenu.menuDate),
         stats: {
@@ -110,11 +115,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: tuesdayMenu.menu,
-    };
+    } : {};
 
     // Wednesday
     const wednesdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 3);
-    week.value.wednesday = {
+    week.value.wednesday = wednesdayMenu ? {
         name: 'Wednesday',
         date: convertToLocalDate(wednesdayMenu.menuDate),
         stats: {
@@ -128,11 +133,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: wednesdayMenu.menu,
-    };
+    } : {};
 
     // Thursday
     const thursdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 4);
-    week.value.thursday = {
+    week.value.thursday = thursdayMenu ? {
         name: 'Thursday',
         date: convertToLocalDate(thursdayMenu.menuDate),
         stats: {
@@ -146,11 +151,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: thursdayMenu.menu,
-    };
+    } : {};
 
     // Friday
     const fridayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 5);
-    week.value.friday = {
+    week.value.friday = fridayMenu ? {
         name: 'Friday',
         date: convertToLocalDate(fridayMenu.menuDate),
         stats: {
@@ -164,11 +169,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: fridayMenu.menu,
-    };
+    } : {};
 
     // Saturday
     const saturdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 6);
-    week.value.saturday = {
+    week.value.saturday = saturdayMenu ? {
         name: 'Saturday',
         date: convertToLocalDate(saturdayMenu.menuDate),
         stats: {
@@ -182,12 +187,14 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: saturdayMenu.menu,
-    };
+    } : {};
 
     // Stats
     week.value.stats = {
-        totalThaalis: week.value.monday.stats.totalThaalis + week.value.tuesday.stats.totalThaalis + week.value.wednesday.stats.totalThaalis + week.value.thursday.stats.totalThaalis + week.value.friday.stats.totalThaalis + week.value.saturday.stats.totalThaalis,
-        maxDay: Math.max(week.value.monday.stats.totalThaalis, week.value.tuesday.stats.totalThaalis, week.value.wednesday.stats.totalThaalis, week.value.thursday.stats.totalThaalis, week.value.friday.stats.totalThaalis, week.value.saturday.stats.totalThaalis)
+        // totalThaalis: week.value.monday.stats.totalThaalis + week.value.tuesday.stats.totalThaalis + week.value.wednesday.stats.totalThaalis + week.value.thursday.stats.totalThaalis + week.value.friday.stats.totalThaalis + week.value.saturday.stats.totalThaalis,
+        // maxDay: Math.max(week.value.monday.stats.totalThaalis, week.value.tuesday.stats.totalThaalis, week.value.wednesday.stats.totalThaalis, week.value.thursday.stats.totalThaalis, week.value.friday.stats.totalThaalis, week.value.saturday.stats.totalThaalis)
+        totalThaalis: 0,
+        maxDay: 0,
     };
 });
 
@@ -202,13 +209,17 @@ onMounted(async () => {
 
 .sidebar-container {
     width: 23vw;
+}
+
+.sidebar-container .n-card {
+    width: 23vw;
+    background-color: #F5F5F5;
     border: 2px solid #E7E7E7;
     border-radius: 2px;
 }
 
-.sidebar-container .n-card {
-    border: 0;
-    background-color: #F5F5F5;
+.sidebar-container .n-date-picker {
+    width: 23vw;
 }
 
 .daily-menus-container {
