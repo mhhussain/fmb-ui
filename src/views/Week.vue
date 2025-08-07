@@ -83,7 +83,7 @@ onMounted(async () => {
 
     // Monday
     const mondayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 1);
-    week.value.monday = {
+    week.value.monday = mondayMenu ? {
         name: 'Monday',
         date: convertToLocalDate(mondayMenu.menuDate),
         stats: {
@@ -97,11 +97,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: mondayMenu.menu,
-    };
+    } : {};
 
     // Tuesday
     const tuesdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 2);
-    week.value.tuesday = {
+    week.value.tuesday = tuesdayMenu ? {
         name: 'Tuesday',
         date: convertToLocalDate(tuesdayMenu.menuDate),
         stats: {
@@ -115,11 +115,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: tuesdayMenu.menu,
-    };
+    } : {};
 
     // Wednesday
     const wednesdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 3);
-    week.value.wednesday = {
+    week.value.wednesday = wednesdayMenu ? {
         name: 'Wednesday',
         date: convertToLocalDate(wednesdayMenu.menuDate),
         stats: {
@@ -133,11 +133,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: wednesdayMenu.menu,
-    };
+    } : {};
 
     // Thursday
     const thursdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 4);
-    week.value.thursday = {
+    week.value.thursday = thursdayMenu ? {
         name: 'Thursday',
         date: convertToLocalDate(thursdayMenu.menuDate),
         stats: {
@@ -151,11 +151,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: thursdayMenu.menu,
-    };
+    } : {};
 
     // Friday
     const fridayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 5);
-    week.value.friday = {
+    week.value.friday = fridayMenu ? {
         name: 'Friday',
         date: convertToLocalDate(fridayMenu.menuDate),
         stats: {
@@ -169,11 +169,11 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: fridayMenu.menu,
-    };
+    } : {};
 
     // Saturday
     const saturdayMenu = response.data[0].menus.find(menu => convertToLocalDate(menu.menuDate).weekday === 6);
-    week.value.saturday = {
+    week.value.saturday = saturdayMenu ? {
         name: 'Saturday',
         date: convertToLocalDate(saturdayMenu.menuDate),
         stats: {
@@ -187,12 +187,14 @@ onMounted(async () => {
             totalMehmanThaalis: 0,
         },
         menu: saturdayMenu.menu,
-    };
+    } : {};
 
     // Stats
     week.value.stats = {
-        totalThaalis: week.value.monday.stats.totalThaalis + week.value.tuesday.stats.totalThaalis + week.value.wednesday.stats.totalThaalis + week.value.thursday.stats.totalThaalis + week.value.friday.stats.totalThaalis + week.value.saturday.stats.totalThaalis,
-        maxDay: Math.max(week.value.monday.stats.totalThaalis, week.value.tuesday.stats.totalThaalis, week.value.wednesday.stats.totalThaalis, week.value.thursday.stats.totalThaalis, week.value.friday.stats.totalThaalis, week.value.saturday.stats.totalThaalis)
+        // totalThaalis: week.value.monday.stats.totalThaalis + week.value.tuesday.stats.totalThaalis + week.value.wednesday.stats.totalThaalis + week.value.thursday.stats.totalThaalis + week.value.friday.stats.totalThaalis + week.value.saturday.stats.totalThaalis,
+        // maxDay: Math.max(week.value.monday.stats.totalThaalis, week.value.tuesday.stats.totalThaalis, week.value.wednesday.stats.totalThaalis, week.value.thursday.stats.totalThaalis, week.value.friday.stats.totalThaalis, week.value.saturday.stats.totalThaalis)
+        totalThaalis: 0,
+        maxDay: 0,
     };
 });
 
