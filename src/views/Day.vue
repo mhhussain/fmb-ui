@@ -159,7 +159,6 @@ import { apiUrl } from '@/utils/helpers'
 
 import CountSummaryCard from '@/components/organisms/CountSummaryCard.vue'
 import MenuList from '@/components/organisms/MenuList.vue'
-import AddMenuItem from '@/components/organisms/AddMenuItem.vue'
 
 const route = useRoute();
 const day = route.params.day.charAt(0).toUpperCase() + route.params.day.slice(1);
