@@ -12,7 +12,7 @@
         <n-space class="day-container" vertical>
             <n-grid :x-gap="12" :y-gap="12" :cols="12">
                 <n-gi :span="6">
-                    <MenuList :menu="menuData.menu" />
+                    <MenuList :menuId="menuData.menuId" :menu="menuData.menu" />
                 </n-gi>
                 <n-gi :span="6">
                     <CountSummaryCard :dailyPreferences="dailyPreferences" :optedOutDailyPreferences="optedOutDailyPreferences" />
@@ -159,6 +159,7 @@ import { apiUrl } from '@/utils/helpers'
 
 import CountSummaryCard from '@/components/organisms/CountSummaryCard.vue'
 import MenuList from '@/components/organisms/MenuList.vue'
+import AddMenuItem from '@/components/organisms/AddMenuItem.vue'
 
 const route = useRoute();
 const day = route.params.day.charAt(0).toUpperCase() + route.params.day.slice(1);
@@ -240,9 +241,19 @@ const dailyPreferencesColumns = [
         },
     },
     {
+        key: 'headOfHouseholdFirstName',
+        title: 'First Name',
+        width: 50, 
+    },
+    {
+        key: 'headOfHouseholdLastName',
+        title: 'Last Name',
+        width: 50,
+    },
+    {
         key: 'headOfHouseholdName',
         title: 'Household',
-        width: 50,
+        width: 0,
         ellipsis: {
             tooltip: true
         },
@@ -257,15 +268,15 @@ const dailyPreferencesColumns = [
             return ~row.headOfHouseholdName.toLowerCase().indexOf(value.toLowerCase());
         },
     },
-    {
-        key: 'notes',
-        title: 'Notes',
-        className: 'notes',
-        width: 100,
-        ellipsis: {
-            tooltip: true
-        }
-    },
+    // {
+    //     key: 'notes',
+    //     title: 'Notes',
+    //     className: 'notes',
+    //     width: 100,
+    //     ellipsis: {
+    //         tooltip: true
+    //     }
+    // },
     // {
     //     key: 'status',
     //     title: 'Status',
@@ -352,7 +363,7 @@ const downloadCSV = () => dataTableRef.value?.downloadCsv({
     keepOriginalData: true,
 });
 
-// MODAL CONFIGURATION
+//  PREFERENCE MODAL CONFIGURATION
 const statusOptions = [
     {
         label: 'Unknown',
@@ -486,7 +497,8 @@ const onUpdatePreference = async () => {
         message.error(`Failed to update preference: ${data.message}`);
     }
     showPreferenceModal.value.loading = false;
-}
+};
+
 
 // DATA REFERENCES
 
@@ -564,7 +576,6 @@ const zoneList = computed(() => {
 });
 
 // API CALLS
-
 const getMenuData = async () => {
     const response = await fetch(`${apiUrl}/api/v2/admin/week/${route.params.startDate}/${day}`);
     const data = await response.json();
