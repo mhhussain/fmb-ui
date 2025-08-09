@@ -240,14 +240,25 @@ const dailyPreferencesColumns = [
         },
     },
     {
+        key: 'headOfHouseholdTitle',
+        title: 'Title',
+        width: 25,
+        ellipsis: {
+            tooltip: true
+        },
+    },
+    {
         key: 'headOfHouseholdFirstName',
         title: 'First Name',
-        width: 50, 
+        width: 35,
+        ellipsis: {
+            tooltip: true
+        },
     },
     {
         key: 'headOfHouseholdLastName',
         title: 'Last Name',
-        width: 50,
+        width: 65,
     },
     {
         key: 'headOfHouseholdName',
